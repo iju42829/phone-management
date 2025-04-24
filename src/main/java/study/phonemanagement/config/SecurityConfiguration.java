@@ -2,6 +2,7 @@ package study.phonemanagement.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -28,11 +29,39 @@ public class SecurityConfiguration {
     }
 
     @Bean
+    @Order(1)
+    public SecurityFilterChain adminFilterChain(HttpSecurity http) throws Exception {
+        http
+                .securityMatcher("/admin/**")
+                .authorizeHttpRequests(auth -> auth.anyRequest().hasRole(ADMIN.name()))
+                .formLogin(form -> form.loginPage("/admin/login")
+                        .loginProcessingUrl("/admin/login")
+                        .defaultSuccessUrl("/admin")
+                        .permitAll())
+
+                .logout(logout -> logout
+                        .logoutUrl("/admin/logout")
+                        .logoutSuccessUrl("/admin/login"))
+
+                .exceptionHandling((exceptions) -> exceptions
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            response.sendRedirect("/admin/login");
+                        })
+                )
+
+                .sessionManagement((auth) -> auth
+                    .maximumSessions(1)
+                    .maxSessionsPreventsLogin(true));
+
+        return http.build();
+    }
+
+    @Bean
+    @Order(2)
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/users/join", "/users/login").permitAll()
-                        .requestMatchers("/admin/**").hasRole(ADMIN.name())
                         .requestMatchers("/**").hasRole(USER.name())
                         .anyRequest().authenticated());
 
