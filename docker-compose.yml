@@ -1,0 +1,22 @@
+services:
+  mysql-container:
+    image: mysql
+    restart: always
+    ports:
+      - "${DB_PORT}:${DB_PORT}"
+    environment:
+      MYSQL_ROOT_PASSWORD: "${DB_PASSWORD}"
+      MYSQL_DATABASE: "${DB_NAME}"
+
+  springboot_container:
+    build: .
+    depends_on:
+      - mysql-container
+    restart: always
+    ports:
+      - "${SERVER_PORT}:${SERVER_PORT}"
+
+    environment:
+      DB_URL: "${DB_URL}"
+      DB_USERNAME: "${DB_USERNAME}"
+      DB_PASSWORD: "${DB_PASSWORD}"
