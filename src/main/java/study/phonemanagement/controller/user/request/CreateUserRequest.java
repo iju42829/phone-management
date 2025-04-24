@@ -12,9 +12,8 @@ import study.phonemanagement.entity.user.Gender;
 @Getter @Setter
 public class CreateUserRequest {
 
-    @Email
     @NotBlank
-    private String email;
+    private String username;
 
     @NotBlank
     private String password;
@@ -24,4 +23,8 @@ public class CreateUserRequest {
 
     @NotNull
     private Gender gender;
+
+    @Email
+    @NotBlank
+    private String email;
 }

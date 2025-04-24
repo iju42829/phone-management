@@ -1,4 +1,4 @@
-package study.phonemanagement.service;
+package study.phonemanagement.service.user;
 
 import study.phonemanagement.controller.user.request.CreateUserRequest;
 

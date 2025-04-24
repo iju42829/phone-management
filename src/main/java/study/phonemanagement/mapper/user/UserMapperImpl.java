@@ -13,6 +13,7 @@ public class UserMapperImpl implements UserMapper {
         }
 
         return User.builder()
+                .username(createUserRequest.getUsername())
                 .email(createUserRequest.getEmail())
                 .password(createUserRequest.getPassword())
                 .gender(createUserRequest.getGender())

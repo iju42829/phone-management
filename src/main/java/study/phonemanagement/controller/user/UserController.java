@@ -10,7 +10,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import study.phonemanagement.controller.user.request.CreateUserRequest;
 import study.phonemanagement.controller.user.validator.CreateUserRequestValidator;
-import study.phonemanagement.service.UserService;
+import study.phonemanagement.service.user.UserService;
 
 @Slf4j
 @Controller

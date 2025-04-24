@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Getter @Setter
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
 
@@ -13,17 +13,33 @@ public class User {
     private Long id;
 
     @Column(unique = true)
-    private String email;
+    private String username;
 
     private String password;
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    @Column(unique = true)
+    private String email;
+
     @Builder
-    private User(String email, String password, Gender gender) {
-        this.email = email;
+    public User(String username, String password, Gender gender, Role role, String email) {
+        this.username = username;
         this.password = password;
         this.gender = gender;
+        this.role = role;
+        this.email = email;
+    }
+
+    public void changePassword(String password) {
+        this.password = password;
+    }
+
+    public void changeRole(Role role) {
+        this.role = role;
     }
 }

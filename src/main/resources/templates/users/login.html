@@ -1,10 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/base :: common_header(~{::title})}">
   <meta charset="UTF-8">
-  <title>Title</title>
+  <title>로그인</title>
 </head>
-<body>
+<body class="bg-light d-flex justify-content-center align-items-center" style="height: 100vh;">
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h4 class="card-title mb-4 text-center">로그인</h4>
+          <form th:action method="post">
+            <div class="mb-3">
+              <label class="form-label">아이디</label>
+              <input type="text" class="form-control" name="username" placeholder="아이디를 입력하세요.">
+            </div>
 
+            <div class="mb-3">
+              <label class="form-label">비밀번호</label>
+              <input type="password" class="form-control" name="password" placeholder="비밀번호를 입력하세요.">
+            </div>
+
+            <div class="d-grid mb-2">
+              <button type="submit" class="btn btn-primary">로그인</button>
+            </div>
+            <div class="d-grid mb-2">
+              <a href="/users/join" class="btn btn-secondary">회원가입</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 </body>
 </html>
