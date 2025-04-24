@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
+</head>
+<body class="bg-light d-flex justify-content-center align-items-center" style="height: 100vh;">
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h4 class="card-title mb-4 text-center">회원가입</h4>
+                    <form th:action th:object="${createUserRequest}" th:method="post">
+                        <div class="mb-3">
+                            <label class="form-label">이메일</label>
+                            <input type="text" class="form-control" th:field="*{email}" placeholder="이메일을 입력하세요.">
+                            <div class="text-danger small" th:errors="*{email}"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">비밀번호</label>
+                            <input type="password" class="form-control" th:field="*{password}" placeholder="비밀번호를 입력하세요.">
+                            <div class="text-danger small" th:errors="*{password}"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">비밀번호 확인</label>
+                            <input type="password" class="form-control" th:field="*{confirmPassword}" placeholder="비밀번호를 한 번 더 입력해주세요">
+                            <div class="text-danger small" th:errors="*{confirmPassword}"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label d-block">성별</label>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" th:field="*{gender}" value="MALE" id="male">
+                                <label class="form-check-label" for="male">남성</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" th:field="*{gender}" value="FEMALE" id="female">
+                                <label class="form-check-label" for="female">여성</label>
+                            </div>
+                            <div class="text-danger small" th:errors="*{gender}"></div>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">회원가입</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
