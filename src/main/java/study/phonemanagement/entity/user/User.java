@@ -2,11 +2,12 @@ package study.phonemanagement.entity.user;
 
 import jakarta.persistence.*;
 import lombok.*;
+import study.phonemanagement.entity.BaseTimeEntity;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User {
+public class User extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
