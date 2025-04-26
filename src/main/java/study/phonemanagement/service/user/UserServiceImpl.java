@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import study.phonemanagement.controller.user.request.CreateUserRequest;
 import study.phonemanagement.entity.user.User;
+import study.phonemanagement.exception.user.AlreadyExistsEmailException;
+import study.phonemanagement.exception.user.AlreadyExistsUsernameException;
 import study.phonemanagement.mapper.user.UserMapper;
 import study.phonemanagement.repository.UserRepository;
 
@@ -22,6 +24,14 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public Long createUser(CreateUserRequest createUserRequest) {
+        if (userRepository.existsByUsername(createUserRequest.getUsername())) {
+            throw new AlreadyExistsUsernameException("이미 사용 중인 아이디입니다.");
+        }
+
+        if (userRepository.existsByEmail(createUserRequest.getEmail())) {
+            throw new AlreadyExistsEmailException("이미 사용 중인 이메일입니다.");
+        }
+
         String encodedPassword = passwordEncoder.encode(createUserRequest.getPassword());
 
         User user = userMapper.toUser(createUserRequest);
