@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/base :: common_header(~{::title})}">
+    <meta charset="UTF-8">
+    <title>휴대폰 목록 조회</title>
+</head>
+<body>
+<div th:replace="~{layout/navbar :: navbar}"></div>
+<div class="container my-4">
+    <form class="row justify-content-center" th:action="@{/phones}" method="get">
+        <div class="col-md-6">
+            <div class="d-flex">
+                <input type="search" name="keyword" class="form-control rounded" placeholder="모델명·제조사 검색" aria-label="Search" style="flex: 1;"/>
+                <button type="submit" class="btn btn-outline-primary rounded ms-2">
+                    검색
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="container">
+    <table class="table table-striped table-hover text-center align-middle">
+        <thead class="table-light">
+        <tr>
+            <th>#</th>
+            <th>모델명</th>
+            <th>제조사</th>
+            <th>용량</th>
+            <th>상태</th>
+            <th>가격(₩)</th>
+            <th>재고</th>
+            <th>색상</th>
+            <th>주문</th>
+            <th>문의</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="phone : ${phones}">
+            <td th:text="${phone.id}"></td>
+            <td th:text="${phone.name}"></td>
+            <td th:text="${phone.manufacturer}"></td>
+            <td th:text="${phone.storage}"></td>
+            <td th:text="${phone.status}"></td>
+            <td th:text="${#numbers.formatInteger(phone.price, 0, 'COMMA')}"></td>
+            <td th:text="${phone.quantity}"></td>
+            <td th:text="${phone.color}"></td>
+            <td class="p-1">
+                <a th:href="@{/}" class="btn btn-sm btn-success w-100" th:attr="disabled=${phone.status != '판매중'}">주문</a>
+            </td>
+            <td class="p-1">
+                <a th:href="@{/}" class="btn btn-sm btn-outline-secondary w-100">문의</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+
+</body>
+</html>

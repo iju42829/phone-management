@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg bg-body-tertiary" th:fragment="navbar">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/phones">휴대폰 주문 시스템</a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+                        aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse justify-content-end" id="navbarContent">
+                    <div class="d-flex gap-2">
+                        <a class="btn btn-outline-primary" href="/users/login">로그인</a>
+                        <a class="btn btn-outline-secondary" href="/users/join">회원가입</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </body>
+</html>
