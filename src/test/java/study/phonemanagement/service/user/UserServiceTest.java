@@ -10,6 +10,7 @@ import study.phonemanagement.controller.user.request.CreateUserRequest;
 import study.phonemanagement.entity.user.User;
 import study.phonemanagement.exception.user.AlreadyExistsEmailException;
 import study.phonemanagement.exception.user.AlreadyExistsUsernameException;
+import study.phonemanagement.exception.user.UserNotFoundException;
 import study.phonemanagement.repository.UserRepository;
 
 import java.util.NoSuchElementException;
@@ -44,7 +45,7 @@ class UserServiceTest extends IntegrationTestSupport {
         // then
         User user = userRepository
                 .findById(savedUserId)
-                .orElseThrow(() -> new NoSuchElementException(USER_NOT_FOUND.getMessage()));
+                .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND.getMessage()));
 
         assertThat(user)
                 .extracting(User::getId, User::getUsername, User::getPassword,
