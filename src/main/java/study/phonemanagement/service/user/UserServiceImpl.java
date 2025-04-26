@@ -11,7 +11,8 @@ import study.phonemanagement.exception.user.AlreadyExistsUsernameException;
 import study.phonemanagement.mapper.user.UserMapper;
 import study.phonemanagement.repository.UserRepository;
 
-import static study.phonemanagement.entity.user.Role.*;
+import static study.phonemanagement.common.ErrorCode.*;
+import static study.phonemanagement.entity.user.Role.USER;
 
 @Service
 @Transactional
@@ -25,11 +26,11 @@ public class UserServiceImpl implements UserService{
     @Override
     public Long createUser(CreateUserRequest createUserRequest) {
         if (userRepository.existsByUsername(createUserRequest.getUsername())) {
-            throw new AlreadyExistsUsernameException("이미 사용 중인 아이디입니다.");
+            throw new AlreadyExistsUsernameException(USER_DUPLICATE_USERNAME.getMessage());
         }
 
         if (userRepository.existsByEmail(createUserRequest.getEmail())) {
-            throw new AlreadyExistsEmailException("이미 사용 중인 이메일입니다.");
+            throw new AlreadyExistsEmailException(USER_DUPLICATE_EMAIL.getMessage());
         }
 
         String encodedPassword = passwordEncoder.encode(createUserRequest.getPassword());

@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import study.phonemanagement.IntegrationTestSupport;
+import study.phonemanagement.common.ErrorCode;
 import study.phonemanagement.controller.user.request.CreateUserRequest;
 import study.phonemanagement.entity.user.User;
 import study.phonemanagement.exception.user.AlreadyExistsEmailException;
@@ -14,6 +15,7 @@ import study.phonemanagement.repository.UserRepository;
 import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.*;
+import static study.phonemanagement.common.ErrorCode.*;
 import static study.phonemanagement.entity.user.Gender.MALE;
 import static study.phonemanagement.entity.user.Role.USER;
 
@@ -42,7 +44,7 @@ class UserServiceTest extends IntegrationTestSupport {
         // then
         User user = userRepository
                 .findById(savedUserId)
-                .orElseThrow(() -> new NoSuchElementException("유저를 찾을 수 없습니다."));
+                .orElseThrow(() -> new NoSuchElementException(USER_NOT_FOUND.getMessage()));
 
         assertThat(user)
                 .extracting(User::getId, User::getUsername, User::getPassword,
@@ -71,7 +73,7 @@ class UserServiceTest extends IntegrationTestSupport {
 
         assertThatThrownBy(() -> userService.createUser(testUser))
                 .isInstanceOf(AlreadyExistsUsernameException.class)
-                .hasMessage("이미 사용 중인 아이디입니다.");
+                .hasMessage(USER_DUPLICATE_USERNAME.getMessage());
     }
 
     @DisplayName("이미 존재하는 이메일로 회원가입을 진행하면 예외가 발생한다.")
@@ -92,7 +94,7 @@ class UserServiceTest extends IntegrationTestSupport {
 
         assertThatThrownBy(() -> userService.createUser(testUser))
                 .isInstanceOf(AlreadyExistsEmailException.class)
-                .hasMessage("이미 사용 중인 이메일입니다.");
+                .hasMessage(USER_DUPLICATE_EMAIL.getMessage());
     }
 
     private static CreateUserRequest createTestUser() {
