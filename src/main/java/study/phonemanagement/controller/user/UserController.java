@@ -34,7 +34,7 @@ public class UserController {
     }
 
     @PostMapping("/join")
-    public String join(Model model, @Validated @ModelAttribute CreateUserRequest createUserRequest, BindingResult bindingResult) {
+    public String join(@Validated @ModelAttribute CreateUserRequest createUserRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             log.info("bindingResult: {}", bindingResult);
             return "users/join";
@@ -42,6 +42,6 @@ public class UserController {
 
         userService.createUser(createUserRequest);
 
-        return "redirect:/";
+        return "redirect:/users/login";
     }
 }

@@ -1,4 +1,4 @@
-package study.phonemanagement.controller;
+package study.phonemanagement.controller.user;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

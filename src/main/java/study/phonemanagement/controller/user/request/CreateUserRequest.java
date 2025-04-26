@@ -3,13 +3,14 @@ package study.phonemanagement.controller.user.request;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import study.phonemanagement.entity.user.Gender;
 
 @ToString
+@Builder
 @Getter @Setter
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class CreateUserRequest {
 
     @NotBlank
