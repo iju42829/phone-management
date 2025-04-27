@@ -2,12 +2,14 @@ package study.phonemanagement.service.phone;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import study.phonemanagement.mapper.phone.PhoneMapper;
 import study.phonemanagement.repository.PhoneRepository;
 import study.phonemanagement.service.phone.response.PhoneResponse;
-
-import java.util.List;
 
 @Service
 @Transactional
@@ -18,9 +20,14 @@ public class PhoneServiceImpl implements PhoneService {
     private final PhoneMapper phoneMapper;
 
     @Override
-    public List<PhoneResponse> getAllPhones() {
-        return phoneRepository.findAll().stream()
-                .map(phoneMapper::toPhoneResponse)
-                .toList();
+    public Page<PhoneResponse> getAllPhones(Integer pageNumber, Integer pageSize) {
+        Pageable pageable = PageRequest.of(
+                pageNumber - 1,
+                pageSize,
+                Sort.by(Sort.Direction.ASC, "id")
+        );
+
+        return phoneRepository.findAll(pageable)
+                .map(phoneMapper::toPhoneResponse);
     }
 }

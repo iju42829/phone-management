@@ -55,6 +55,25 @@
         </tbody>
     </table>
 
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:if="${page.hasPrevious() and startPage > 1}">
+                <a class="page-link" th:href="@{/phones(pageNumber=${startPage - 1}, pageSize=${page.size})}" aria-label="Previous Block">
+                    <span aria-hidden="true">이전</span>
+                </a>
+            </li>
+
+            <li class="page-item" th:each="i : ${pageNumbers}" th:classappend="${i == (page.number + 1)} ? ' active'">
+                <a class="page-link" th:href="@{/phones(pageNumber=${i}, pageSize=${page.size})}" th:text="${i}">1</a>
+            </li>
+
+            <li class="page-item" th:if="${page.hasNext() and endPage < page.totalPages}">
+                <a class="page-link" th:href="@{/phones(pageNumber=${endPage + 1}, pageSize=${page.size})}" aria-label="Next Block">
+                    <span aria-hidden="true">다음</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
 </div>
 
 </body>
