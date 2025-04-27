@@ -20,12 +20,17 @@ public class PhoneServiceImpl implements PhoneService {
     private final PhoneMapper phoneMapper;
 
     @Override
-    public Page<PhoneResponse> getAllPhones(Integer pageNumber, Integer pageSize) {
+    public Page<PhoneResponse> getAllPhones(String searchWord, Integer pageNumber, Integer pageSize) {
         Pageable pageable = PageRequest.of(
                 pageNumber - 1,
                 pageSize,
-                Sort.by(Sort.Direction.ASC, "id")
+                Sort.by(Sort.Direction.DESC, "createdDate")
         );
+
+        if (searchWord != null) {
+            return phoneRepository.findAllByNameStartingWith(searchWord, pageable)
+                    .map(phoneMapper::toPhoneResponse);
+        }
 
         return phoneRepository.findAll(pageable)
                 .map(phoneMapper::toPhoneResponse);

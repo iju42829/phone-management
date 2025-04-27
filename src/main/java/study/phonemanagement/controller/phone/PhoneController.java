@@ -22,11 +22,12 @@ public class PhoneController {
     private final PhoneService phoneService;
 
     @GetMapping
-    public String phoneMainPage(@RequestParam(defaultValue = "1") Integer pageNumber,
+    public String phoneMainPage(@RequestParam(required = false) String searchWord,
+                                @RequestParam(defaultValue = "1") Integer pageNumber,
                                 @RequestParam(defaultValue = "20") Integer pageSize,
                                 Model model) {
 
-        Page<PhoneResponse> page = phoneService.getAllPhones(pageNumber, pageSize);
+        Page<PhoneResponse> page = phoneService.getAllPhones(searchWord, pageNumber, pageSize);
 
         int blockSize  = 10;
         int current    = page.getNumber() + 1;
@@ -45,7 +46,7 @@ public class PhoneController {
         model.addAttribute("pageNumbers", pageNumbers);
         model.addAttribute("startPage",   startPage);
         model.addAttribute("endPage",     endPage);
-
+        model.addAttribute("searchWord", searchWord);
 
         return "phones/phone";
     }
