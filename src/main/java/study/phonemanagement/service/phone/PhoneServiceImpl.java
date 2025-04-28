@@ -7,10 +7,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import study.phonemanagement.controller.phone.request.CreatePhoneRequest;
 import study.phonemanagement.entity.phone.Manufacturer;
+import study.phonemanagement.entity.phone.Phone;
+import study.phonemanagement.exception.phone.PhoneNotFoundException;
 import study.phonemanagement.mapper.phone.PhoneMapper;
 import study.phonemanagement.repository.phone.PhoneRepository;
 import study.phonemanagement.service.phone.response.PhoneResponse;
+
+import static study.phonemanagement.common.ErrorCode.*;
 
 @Service
 @Transactional
@@ -30,5 +35,28 @@ public class PhoneServiceImpl implements PhoneService {
 
         return phoneRepository.findAllPhone(searchWord, manufacturer, pageable)
                 .map(phoneMapper::toPhoneResponse);
+    }
+
+    @Override
+    public Long createPhone(CreatePhoneRequest createPhoneRequest) {
+        Phone phone = phoneMapper.toPhone(createPhoneRequest);
+
+        phoneRepository.save(phone);
+
+        return phone.getId();
+    }
+
+    @Override
+    public void deletePhone(Long phoneId) {
+        Phone phone = phoneRepository.findById(phoneId).orElseThrow(() -> new PhoneNotFoundException(PHONE_NOT_FOUND.getMessage()));
+
+        phone.delete();
+    }
+
+    @Override
+    public PhoneResponse getPhone(Long phoneId) {
+        return phoneRepository.findById(phoneId)
+                .map(phoneMapper::toPhoneResponse)
+                .orElseThrow(() -> new PhoneNotFoundException(PHONE_NOT_FOUND.getMessage()));
     }
 }

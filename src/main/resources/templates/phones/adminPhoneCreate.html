@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/base :: common_header(~{::title})}">
+    <meta charset="UTF-8">
+    <title>휴대폰 등록</title>
+</head>
+<body>
+<div th:replace="~{layout/navbar :: navbar}"></div>
+
+<div class="container my-5">
+    <h2 class="text-center mb-4">휴대폰 등록</h2>
+
+    <form th:action="@{/admin/phones}" th:object="${createPhoneRequest}" method="post" class="row justify-content-center">
+        <div class="col-md-8">
+
+            <div class="mb-3">
+                <label for="name" class="form-label">모델명</label>
+                <input type="text" id="name" th:field="*{name}" class="form-control"/>
+                <div class="text-danger" th:errors="*{name}">모델명을 입력해주세요</div>
+            </div>
+
+            <div class="mb-3">
+                <label for="manufacturer" class="form-label">제조사</label>
+                <select id="manufacturer" th:field="*{manufacturer}" class="form-select">
+                    <option value="">제조사 선택</option>
+                    <option th:each="m : ${manufacturers}"
+                            th:value="${m}"
+                            th:text="${m}"
+                            th:selected="${m == createPhoneRequest.manufacturer}">
+                    </option>
+                </select>
+                <div class="text-danger" th:errors="*{manufacturer}"></div>
+            </div>
+
+            <div class="mb-3">
+                <label for="storage" class="form-label">용량</label>
+                <select id="storage" th:field="*{storage}" class="form-select">
+                    <option value="">용량 선택</option>
+                    <option th:each="s : ${storages}" th:value="${s}" th:text="${s.description}" th:selected="${s == createPhoneRequest.storage}"></option>
+                </select>
+                <div class="text-danger" th:errors="*{storage}"></div>
+            </div>
+
+            <div class="mb-3">
+                <label for="status" class="form-label">상태</label>
+                <select id="status" th:field="*{status}" class="form-select">
+                    <option value="">상태 선택</option>
+                    <option th:each="st : ${statuses}" th:value="${st}" th:text="${st.description}" th:selected="${st == createPhoneRequest.status}">
+                    </option>
+                </select>
+                <div class="text-danger" th:errors="*{status}"></div>
+            </div>
+
+            <div class="mb-3">
+                <label for="price" class="form-label">가격 (₩)</label>
+                <input type="number" id="price" th:field="*{price}" class="form-control" min="0"/>
+                <div class="text-danger" th:errors="*{price}"></div>
+            </div>
+
+            <div class="mb-3">
+                <label for="quantity" class="form-label">재고 수량</label>
+                <input type="number" id="quantity" th:field="*{quantity}" class="form-control" min="0"/>
+                <div class="text-danger" th:errors="*{quantity}"></div>
+            </div>
+
+            <div class="mb-3">
+                <label for="color" class="form-label">색상</label>
+                <input type="text" id="color" th:field="*{color}" class="form-control"/>
+                <div class="text-danger" th:errors="*{color}"></div>
+            </div>
+
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-primary">등록</button>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>

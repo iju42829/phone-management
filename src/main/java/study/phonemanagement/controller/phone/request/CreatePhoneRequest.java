@@ -1,36 +1,34 @@
-package study.phonemanagement.service.phone.response;
+package study.phonemanagement.controller.phone.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.Setter;
 import study.phonemanagement.entity.phone.Manufacturer;
 import study.phonemanagement.entity.phone.Status;
 import study.phonemanagement.entity.phone.Storage;
 
-import java.time.LocalDateTime;
-
-@Builder
 @Getter @Setter
-@AllArgsConstructor
-public class PhoneResponse {
-    private Long id;
-
+public class CreatePhoneRequest {
+    @NotBlank
     private String name;
 
+    @NotNull
     private Manufacturer manufacturer;
 
+    @NotNull
     private Storage storage;
 
+    @NotNull
     private Status status;
 
+    @Positive
     private Integer price;
 
+    @Positive
     private Integer quantity;
 
+    @NotBlank
     private String color;
-
-    private LocalDateTime createdDate;
-
-    private LocalDateTime lastModifiedDate;
 }

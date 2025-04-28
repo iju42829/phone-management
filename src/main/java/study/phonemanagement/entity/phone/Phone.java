@@ -5,10 +5,14 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLRestriction;
 import study.phonemanagement.entity.BaseEntity;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@SQLRestriction("deleted_at is NULL")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Phone extends BaseEntity {
 
@@ -40,6 +44,8 @@ public class Phone extends BaseEntity {
     @Column(nullable = false)
     private String color;
 
+    private LocalDateTime deletedAt;
+
     @Builder
     private Phone(String name, Manufacturer manufacturer, Storage storage, Status status, Integer price, Integer quantity, String color) {
         this.name = name;
@@ -50,4 +56,9 @@ public class Phone extends BaseEntity {
         this.quantity = quantity;
         this.color = color;
     }
+
+    public void delete() {
+        this.deletedAt = LocalDateTime.now();
+    }
+
 }

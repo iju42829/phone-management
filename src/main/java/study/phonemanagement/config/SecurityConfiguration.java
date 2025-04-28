@@ -36,7 +36,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth -> auth.anyRequest().hasRole(ADMIN.name()))
                 .formLogin(form -> form.loginPage("/admin/login")
                         .loginProcessingUrl("/admin/login")
-                        .defaultSuccessUrl("/admin")
+                        .defaultSuccessUrl("/admin/phones")
                         .permitAll())
 
                 .logout(logout -> logout
