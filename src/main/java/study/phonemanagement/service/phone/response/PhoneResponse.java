@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 import study.phonemanagement.entity.phone.Manufacturer;
 
+import java.time.LocalDateTime;
+
 @Builder
 @Getter @Setter
 @AllArgsConstructor
@@ -25,4 +27,6 @@ public class PhoneResponse {
     private Integer quantity;
 
     private String color;
+
+    private LocalDateTime createdDate;
 }

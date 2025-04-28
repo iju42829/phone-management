@@ -1,8 +1,9 @@
 package study.phonemanagement.service.phone;
 
 import org.springframework.data.domain.Page;
+import study.phonemanagement.entity.phone.Manufacturer;
 import study.phonemanagement.service.phone.response.PhoneResponse;
 
 public interface PhoneService {
-    Page<PhoneResponse> getAllPhones(String searchWord,Integer pageNumber, Integer pageSize);
+    Page<PhoneResponse> getAllPhones(String searchWord, Manufacturer manufacturer, Integer pageNumber, Integer pageSize);
 }

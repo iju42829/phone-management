@@ -22,6 +22,7 @@ public class PhoneMapperImpl implements PhoneMapper {
                 .price(phone.getPrice())
                 .quantity(phone.getQuantity())
                 .color(phone.getColor())
+                .createdDate(phone.getCreatedDate())
                 .build();
     }
 }
