@@ -64,6 +64,18 @@ public class PhoneServiceImpl implements PhoneService {
 
     @Override
     public void update(Long phoneId, UpdatePhoneRequest updatePhoneRequest) {
+        Phone phone = phoneRepository
+                .findById(phoneId)
+                .orElseThrow(() -> new PhoneNotFoundException(PHONE_NOT_FOUND.getMessage()));
 
+        phone.update(
+                updatePhoneRequest.getName(),
+                updatePhoneRequest.getManufacturer(),
+                updatePhoneRequest.getStorage(),
+                updatePhoneRequest.getStatus(),
+                updatePhoneRequest.getPrice(),
+                updatePhoneRequest.getQuantity(),
+                updatePhoneRequest.getColor()
+        );
     }
 }

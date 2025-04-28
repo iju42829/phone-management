@@ -57,6 +57,16 @@ public class Phone extends BaseEntity {
         this.color = color;
     }
 
+    public void update(String name, Manufacturer manufacturer, Storage storage, Status status, Integer price, Integer quantity, String color) {
+        this.name = name;
+        this.manufacturer = manufacturer;
+        this.storage = storage;
+        this.status = status;
+        this.price = price;
+        this.quantity = quantity;
+        this.color = color;
+    }
+
     public void delete() {
         this.deletedAt = LocalDateTime.now();
     }
