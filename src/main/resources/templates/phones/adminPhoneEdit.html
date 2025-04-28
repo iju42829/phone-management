@@ -10,14 +10,8 @@
 <div class="container my-5">
     <h2 class="text-center mb-4">휴대폰 수정</h2>
 
-    <form th:action="@{/admin/phones/{phoneId}(phoneId=${phone.id})}" th:object="${phone}" th:method="patch" class="row justify-content-center">
+    <form th:action="@{/admin/phones/{phoneId}(phoneId=${phoneId})}" th:object="${phone}" th:method="patch" class="row justify-content-center">
         <div class="col-md-8">
-
-            <div class="mb-3">
-                <label for="id" class="form-label">id</label>
-                <input type="text" id="id" th:field="*{id}" class="form-control bg-light border-0 fw-semibold" readonly/>
-                <div class="text-danger" th:errors="*{id}"></div>
-            </div>
 
             <div class="mb-3">
                 <label for="name" class="form-label">모델명</label>

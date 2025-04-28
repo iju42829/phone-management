@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 @Getter @Setter
 @AllArgsConstructor
-public class PhoneResponse {
+public class ListPhoneResponse {
     private Long id;
 
     private String name;
@@ -31,6 +31,4 @@ public class PhoneResponse {
     private String color;
 
     private LocalDateTime createdDate;
-
-    private LocalDateTime lastModifiedDate;
 }

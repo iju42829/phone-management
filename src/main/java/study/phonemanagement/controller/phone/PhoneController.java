@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import study.phonemanagement.entity.phone.Manufacturer;
 import study.phonemanagement.service.phone.PhoneService;
-import study.phonemanagement.service.phone.response.PhoneResponse;
+import study.phonemanagement.service.phone.response.ListPhoneResponse;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,7 +28,7 @@ public class PhoneController {
                                 @RequestParam(defaultValue = "1") Integer pageNumber,
                                 @RequestParam(defaultValue = "20") Integer pageSize,
                                 Model model) {
-        Page<PhoneResponse> page = phoneService.getAllPhones(searchWord, manufacturer, pageNumber, pageSize);
+        Page<ListPhoneResponse> page = phoneService.getAllPhones(searchWord, manufacturer, pageNumber, pageSize);
 
         int blockSize  = 10;
         int current    = page.getNumber() + 1;

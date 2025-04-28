@@ -2,9 +2,11 @@ package study.phonemanagement.mapper.phone;
 
 import study.phonemanagement.controller.phone.request.CreatePhoneRequest;
 import study.phonemanagement.entity.phone.Phone;
-import study.phonemanagement.service.phone.response.PhoneResponse;
+import study.phonemanagement.service.phone.response.ListPhoneResponse;
+import study.phonemanagement.service.phone.response.UpdatePhoneResponse;
 
 public interface PhoneMapper {
-    PhoneResponse toPhoneResponse(Phone phone);
+    ListPhoneResponse toPhoneListResponse(Phone phone);
+    UpdatePhoneResponse toUpdatePhoneResponse(Phone phone);
     Phone toPhone(CreatePhoneRequest createPhoneRequest);
 }

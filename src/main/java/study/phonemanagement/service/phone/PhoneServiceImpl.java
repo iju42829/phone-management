@@ -8,12 +8,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import study.phonemanagement.controller.phone.request.CreatePhoneRequest;
+import study.phonemanagement.controller.phone.request.UpdatePhoneRequest;
 import study.phonemanagement.entity.phone.Manufacturer;
 import study.phonemanagement.entity.phone.Phone;
 import study.phonemanagement.exception.phone.PhoneNotFoundException;
 import study.phonemanagement.mapper.phone.PhoneMapper;
 import study.phonemanagement.repository.phone.PhoneRepository;
-import study.phonemanagement.service.phone.response.PhoneResponse;
+import study.phonemanagement.service.phone.response.ListPhoneResponse;
+import study.phonemanagement.service.phone.response.UpdatePhoneResponse;
 
 import static study.phonemanagement.common.ErrorCode.*;
 
@@ -26,7 +28,7 @@ public class PhoneServiceImpl implements PhoneService {
     private final PhoneMapper phoneMapper;
 
     @Override
-    public Page<PhoneResponse> getAllPhones(String searchWord, Manufacturer manufacturer, Integer pageNumber, Integer pageSize) {
+    public Page<ListPhoneResponse> getAllPhones(String searchWord, Manufacturer manufacturer, Integer pageNumber, Integer pageSize) {
         Pageable pageable = PageRequest.of(
                 pageNumber - 1,
                 pageSize,
@@ -34,7 +36,7 @@ public class PhoneServiceImpl implements PhoneService {
         );
 
         return phoneRepository.findAllPhone(searchWord, manufacturer, pageable)
-                .map(phoneMapper::toPhoneResponse);
+                .map(phoneMapper::toPhoneListResponse);
     }
 
     @Override
@@ -54,9 +56,14 @@ public class PhoneServiceImpl implements PhoneService {
     }
 
     @Override
-    public PhoneResponse getPhone(Long phoneId) {
+    public UpdatePhoneResponse getPhoneForUpdate(Long phoneId) {
         return phoneRepository.findById(phoneId)
-                .map(phoneMapper::toPhoneResponse)
+                .map(phoneMapper::toUpdatePhoneResponse)
                 .orElseThrow(() -> new PhoneNotFoundException(PHONE_NOT_FOUND.getMessage()));
+    }
+
+    @Override
+    public void update(Long phoneId, UpdatePhoneRequest updatePhoneRequest) {
+
     }
 }

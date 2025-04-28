@@ -14,7 +14,8 @@ import study.phonemanagement.entity.phone.Manufacturer;
 import study.phonemanagement.entity.phone.Status;
 import study.phonemanagement.entity.phone.Storage;
 import study.phonemanagement.service.phone.PhoneService;
-import study.phonemanagement.service.phone.response.PhoneResponse;
+import study.phonemanagement.service.phone.response.ListPhoneResponse;
+import study.phonemanagement.service.phone.response.UpdatePhoneResponse;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -49,7 +50,7 @@ public class AdminPhoneController {
                                 @RequestParam(defaultValue = "1") Integer pageNumber,
                                 @RequestParam(defaultValue = "20") Integer pageSize,
                                 Model model) {
-        Page<PhoneResponse> page = phoneService.getAllPhones(searchWord, manufacturer, pageNumber, pageSize);
+        Page<ListPhoneResponse> page = phoneService.getAllPhones(searchWord, manufacturer, pageNumber, pageSize);
 
         int blockSize  = 10;
         int current    = page.getNumber() + 1;
@@ -78,14 +79,13 @@ public class AdminPhoneController {
 
     @GetMapping("/create")
     public String phoneCreatePage(Model model) {
-        model.addAttribute("createPhoneRequest", new CreatePhoneRequest());
+        model.addAttribute("phone", new CreatePhoneRequest());
 
         return "phones/adminPhoneCreate";
     }
 
     @PostMapping
-    public String addPhone(Model model,
-                           @Validated @ModelAttribute CreatePhoneRequest createPhoneRequest,
+    public String addPhone(@Validated @ModelAttribute("phone") CreatePhoneRequest createPhoneRequest,
                            BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             log.info("bindingResult: {}", bindingResult);
@@ -107,23 +107,28 @@ public class AdminPhoneController {
 
     @GetMapping("/{phoneId}/edit")
     public String editPhonePage(Model model, @PathVariable Long phoneId) {
-        PhoneResponse phone = phoneService.getPhone(phoneId);
+        UpdatePhoneResponse phone = phoneService.getPhoneForUpdate(phoneId);
 
+        model.addAttribute("phoneId", phoneId);
         model.addAttribute("phone", phone);
 
         return "phones/adminPhoneEdit";
     }
 
     @PatchMapping("/{phoneId}")
-    public String editPhone(@PathVariable Long phoneId,
+    public String editPhone(Model model,
+                            @PathVariable Long phoneId,
                             @Validated @ModelAttribute("phone") UpdatePhoneRequest updatePhoneRequest,
                             BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
+            model.addAttribute("phoneId", phoneId);
             log.info("bindingResult: {}", bindingResult);
 
             return "phones/adminPhoneEdit";
         }
+
+        phoneService.update(phoneId, updatePhoneRequest);
 
         return "redirect:/admin/phones";
     }

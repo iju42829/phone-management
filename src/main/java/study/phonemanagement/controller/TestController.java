@@ -13,6 +13,6 @@ public class TestController {
 
     @GetMapping("/admin")
     public String testAdmin() {
-        return "admin";
+        return "admin/main";
     }
 }
