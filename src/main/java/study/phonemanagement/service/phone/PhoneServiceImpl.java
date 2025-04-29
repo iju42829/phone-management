@@ -1,12 +1,12 @@
 package study.phonemanagement.service.phone;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import study.phonemanagement.controller.phone.request.CreatePhoneRequest;
 import study.phonemanagement.controller.phone.request.UpdatePhoneRequest;
 import study.phonemanagement.entity.phone.Manufacturer;
@@ -50,7 +50,8 @@ public class PhoneServiceImpl implements PhoneService {
 
     @Override
     public void deletePhone(Long phoneId) {
-        Phone phone = phoneRepository.findById(phoneId).orElseThrow(() -> new PhoneNotFoundException(PHONE_NOT_FOUND.getMessage()));
+        Phone phone = phoneRepository.findById(phoneId)
+                .orElseThrow(() -> new PhoneNotFoundException(PHONE_NOT_FOUND.getMessage()));
 
         phone.delete();
     }

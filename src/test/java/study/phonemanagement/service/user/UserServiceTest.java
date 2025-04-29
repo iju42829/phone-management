@@ -5,7 +5,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import study.phonemanagement.IntegrationTestSupport;
-import study.phonemanagement.common.ErrorCode;
 import study.phonemanagement.controller.user.request.CreateUserRequest;
 import study.phonemanagement.entity.user.User;
 import study.phonemanagement.exception.user.AlreadyExistsEmailException;
@@ -13,9 +12,8 @@ import study.phonemanagement.exception.user.AlreadyExistsUsernameException;
 import study.phonemanagement.exception.user.UserNotFoundException;
 import study.phonemanagement.repository.UserRepository;
 
-import java.util.NoSuchElementException;
-
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static study.phonemanagement.common.ErrorCode.*;
 import static study.phonemanagement.entity.user.Gender.MALE;
 import static study.phonemanagement.entity.user.Role.USER;
