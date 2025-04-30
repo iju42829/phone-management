@@ -6,14 +6,19 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import study.phonemanagement.config.SecurityConfiguration;
+import study.phonemanagement.controller.phone.AdminPhoneController;
+import study.phonemanagement.controller.phone.PhoneController;
 import study.phonemanagement.controller.user.AuthController;
 import study.phonemanagement.controller.user.UserController;
 import study.phonemanagement.controller.user.validator.CreateUserRequestValidator;
+import study.phonemanagement.service.phone.PhoneService;
 import study.phonemanagement.service.user.UserService;
 
 @WebMvcTest(controllers = {
         UserController.class,
-        AuthController.class
+        AuthController.class,
+        PhoneController.class,
+        AdminPhoneController.class
 })
 @Import({
         CreateUserRequestValidator.class,
@@ -25,5 +30,8 @@ public abstract class ControllerTestSupport {
     protected MockMvc mockMvc;
 
     @MockitoBean
-    UserService userService;
+    protected UserService userService;
+
+    @MockitoBean
+    protected PhoneService phoneService;
 }

@@ -26,9 +26,11 @@ public class UpdatePhoneRequest {
     private Status status;
 
     @Positive
+    @NotNull
     private Integer price;
 
     @Positive
+    @NotNull
     private Integer quantity;
 
     @NotBlank
