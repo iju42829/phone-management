@@ -49,6 +49,42 @@
                             <div class="text-danger small" th:errors="*{gender}"></div>
                         </div>
 
+                        <div class="mb-3">
+                            <label class="form-label">도시</label>
+                            <input type="text"
+                                   class="form-control"
+                                   th:field="*{city}"
+                                   placeholder="도시를 입력하세요.">
+                            <div class="text-danger small" th:errors="*{city}"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">도로명 주소</label>
+                            <input type="text"
+                                   class="form-control"
+                                   th:field="*{street}"
+                                   placeholder="도로명 주소를 입력하세요.">
+                            <div class="text-danger small" th:errors="*{street}"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">우편번호</label>
+                            <input type="text"
+                                   class="form-control"
+                                   th:field="*{zipcode}"
+                                   placeholder="우편번호를 입력하세요.">
+                            <div class="text-danger small" th:errors="*{zipcode}"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">상세주소</label>
+                            <input type="text"
+                                   class="form-control"
+                                   th:field="*{detail}"
+                                   placeholder="상세주소를 입력하세요. (선택)">
+                            <div class="text-danger small" th:errors="*{detail}"></div>
+                        </div>
+
                         <div class="d-grid">
                             <button type="submit" class="btn btn-primary">회원가입</button>
                         </div>

@@ -1,17 +1,14 @@
 package study.phonemanagement.entity.phone;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.SQLRestriction;
 import study.phonemanagement.entity.BaseEntity;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Getter
+@Getter @Setter
 @SQLRestriction("deleted_at is NULL")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Phone extends BaseEntity {
@@ -71,4 +68,11 @@ public class Phone extends BaseEntity {
         this.deletedAt = LocalDateTime.now();
     }
 
+    public void reduceQuantity(Integer quantity) {
+        this.quantity -= quantity;
+    }
+
+    public void addQuantity(Integer quantity) {
+        this.quantity += quantity;
+    }
 }

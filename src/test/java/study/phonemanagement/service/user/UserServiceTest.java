@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import study.phonemanagement.IntegrationTestSupport;
 import study.phonemanagement.controller.user.request.CreateUserRequest;
+import study.phonemanagement.entity.common.Address;
 import study.phonemanagement.entity.user.User;
 import study.phonemanagement.exception.user.AlreadyExistsEmailException;
 import study.phonemanagement.exception.user.AlreadyExistsUsernameException;
@@ -35,7 +36,7 @@ class UserServiceTest extends IntegrationTestSupport {
     @Test
     void createUser() {
         // given
-        CreateUserRequest createUserRequest = createTestUser();
+        CreateUserRequest createUserRequest = createTestUser("test", "test@test");
 
         // when
         Long savedUserId = userService.createUser(createUserRequest);
@@ -52,23 +53,21 @@ class UserServiceTest extends IntegrationTestSupport {
                 .contains(savedUserId,
                         createUserRequest.getUsername(), createUserRequest.getPassword(),
                         createUserRequest.getGender(), USER, createUserRequest.getEmail());
+
+        assertThat(user.getAddress())
+            .extracting(Address::getCity, Address::getStreet, Address::getZipcode, Address::getDetail)
+            .containsExactly(createUserRequest.getCity(), createUserRequest.getStreet(), createUserRequest.getZipcode(), createUserRequest.getDetail());
     }
 
     @DisplayName("이미 존재하는 아이디로 회원가입을 진행하면 예외가 발생한다.")
     @Test
     void createUserDuplicateUsername() {
         // given
-        CreateUserRequest createUserRequest1 = createTestUser();
+        CreateUserRequest createUserRequest1 = createTestUser("test", "test@test");
         userService.createUser(createUserRequest1);
 
         // when - then
-        CreateUserRequest testUser = CreateUserRequest.builder()
-                .username("test")
-                .password("test")
-                .confirmPassword("test")
-                .gender(MALE)
-                .email("test@test1")
-                .build();
+        CreateUserRequest testUser = createTestUser("test", "test@test1");
 
         assertThatThrownBy(() -> userService.createUser(testUser))
                 .isInstanceOf(AlreadyExistsUsernameException.class)
@@ -79,30 +78,28 @@ class UserServiceTest extends IntegrationTestSupport {
     @Test
     void createUserDuplicateEmail() {
         // given
-        CreateUserRequest createUserRequest1 = createTestUser();
+        CreateUserRequest createUserRequest1 = createTestUser("test", "test@test");
         userService.createUser(createUserRequest1);
 
         // when - then
-        CreateUserRequest testUser = CreateUserRequest.builder()
-                .username("test1")
-                .password("test")
-                .confirmPassword("test")
-                .gender(MALE)
-                .email("test@test")
-                .build();
+        CreateUserRequest testUser = createTestUser("test1", "test@test");
 
         assertThatThrownBy(() -> userService.createUser(testUser))
                 .isInstanceOf(AlreadyExistsEmailException.class)
                 .hasMessage(USER_DUPLICATE_EMAIL.getMessage());
     }
 
-    private static CreateUserRequest createTestUser() {
+    private static CreateUserRequest createTestUser(String username, String email) {
         return CreateUserRequest.builder()
-                .username("test")
+                .username(username)
                 .password("test")
                 .confirmPassword("test")
                 .gender(MALE)
-                .email("test@test")
+                .email(email)
+                .city("testCity")
+                .street("testStreet")
+                .zipcode("testZipcode")
+                .detail("testDetail")
                 .build();
     }
 }

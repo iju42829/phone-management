@@ -36,7 +36,10 @@ class UserControllerTest extends ControllerTestSupport {
                                 .param("confirmPassword", "test")
                                 .param("gender", "MALE")
                                 .param("email", "test@test")
-
+                                .param("city", "testCity")
+                                .param("street", "testStreet")
+                                .param("zipcode", "testZipcode")
+                                .param("detail", "testDetail")
                 )
                 // then
                 .andExpect(status().is3xxRedirection())
@@ -56,6 +59,10 @@ class UserControllerTest extends ControllerTestSupport {
                                 .param("confirmPassword", "test1")
                                 .param("gender", "MALE")
                                 .param("email", "test@test")
+                                .param("city", "testCity")
+                                .param("street", "testStreet")
+                                .param("zipcode", "testZipcode")
+                                .param("detail", "testDetail")
                 )
                 .andExpect(status().isOk())
                 .andExpect(model().attributeHasErrors("createUserRequest"))
@@ -74,7 +81,7 @@ class UserControllerTest extends ControllerTestSupport {
         )
                 .andExpect(status().isOk())
                 .andExpect(model().attributeHasErrors("createUserRequest"))
-                .andExpect(model().attributeErrorCount("createUserRequest", 5))
+                .andExpect(model().attributeErrorCount("createUserRequest", 8))
                 .andExpect(view().name("users/join"));
     }
 }

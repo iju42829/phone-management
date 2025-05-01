@@ -3,6 +3,7 @@ package study.phonemanagement.mapper.phone;
 import org.springframework.stereotype.Component;
 import study.phonemanagement.controller.phone.request.CreatePhoneRequest;
 import study.phonemanagement.entity.phone.Phone;
+import study.phonemanagement.service.phone.response.DetailPhoneResponse;
 import study.phonemanagement.service.phone.response.ListPhoneResponse;
 import study.phonemanagement.service.phone.response.UpdatePhoneResponse;
 
@@ -42,6 +43,28 @@ public class PhoneMapperImpl implements PhoneMapper {
                 .price(phone.getPrice())
                 .quantity(phone.getQuantity())
                 .color(phone.getColor())
+                .build();
+    }
+
+    @Override
+    public DetailPhoneResponse toDetailPhoneResponse(Phone phone) {
+        if (phone == null) {
+            return null;
+        }
+
+        return DetailPhoneResponse.builder()
+                .id(phone.getId())
+                .name(phone.getName())
+                .manufacturer(phone.getManufacturer())
+                .storage(phone.getStorage())
+                .status(phone.getStatus())
+                .price(phone.getPrice())
+                .quantity(phone.getQuantity())
+                .color(phone.getColor())
+                .createdBy(phone.getCreatedBy())
+                .lastModifiedBy(phone.getLastModifiedBy())
+                .createdDate(phone.getCreatedDate())
+                .lastModifiedDate(phone.getLastModifiedDate())
                 .build();
     }
 

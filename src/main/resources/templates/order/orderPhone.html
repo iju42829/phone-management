@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/base :: common_header(~{::title})}">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:replace="~{layout/navbar :: navbar}"></div>
+
+<div class="container py-5">
+    <form th:action="@{/orders}" th:object="${order}" method="post">
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="mb-2">
+                    <h5>상품 내역</h5>
+                </div>
+                <div th:each="dto, idx : *{createOrderPhoneRequestList}">
+                    <div class="card mb-3 shadow-sm">
+                        <div class="card-body">
+                            <h6 class="card-title"
+                                th:text="${phone[__${idx.index}__].name}"></h6>
+                            <p class="card-text small mb-2">
+                                제조사: <span th:text="${phone[__${idx.index}__].manufacturer}"></span><br/>
+                                용량: <span th:text="${phone[__${idx.index}__].storage}"></span><br/>
+                                가격: <strong th:text="${phone[__${idx.index}__].price}"></strong>원<br/>
+                                재고: <span th:text="${phone[__${idx.index}__].quantity}"></span>대
+                            </p>
+                            <div class="mb-2">
+                                <label class="form-label small">수량</label>
+                                <input type="hidden"
+                                       th:field="*{createOrderPhoneRequestList[__${idx.index}__].phoneId}" />
+                                <input type="number"
+                                       th:field="*{createOrderPhoneRequestList[__${idx.index}__].count}"
+                                       class="form-control form-control-sm"
+                                       min="1"
+                                       th:attr="max=${phone[__${idx.index}__].quantity}" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="mb-2">
+                    <h5>배송 정보</h5>
+                </div>
+                <div class="card mb-3 shadow-sm">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label small">도시</label>
+                            <input type="text"
+                                   class="form-control form-control-sm"
+                                   th:field="*{delivery.city}"
+                                   placeholder="도시를 입력하세요">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small">도로명 주소</label>
+                            <input type="text"
+                                   class="form-control form-control-sm"
+                                   th:field="*{delivery.street}"
+                                   placeholder="도로명 주소를 입력하세요">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small">우편번호</label>
+                            <input type="text"
+                                   class="form-control form-control-sm"
+                                   th:field="*{delivery.zipcode}"
+                                   placeholder="우편번호를 입력하세요">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small">상세주소</label>
+                            <input type="text"
+                                   class="form-control form-control-sm"
+                                   th:field="*{delivery.detail}"
+                                   placeholder="상세주소를 입력하세요">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-center mt-4">
+            <button type="submit" class="btn btn-success btn-lg me-3">
+                주문하기
+            </button>
+            <button type="button" class="btn btn-secondary btn-lg">
+                장바구니 담기
+            </button>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

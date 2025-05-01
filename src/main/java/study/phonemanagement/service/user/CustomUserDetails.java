@@ -1,5 +1,6 @@
 package study.phonemanagement.service.user;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,6 +9,7 @@ import study.phonemanagement.entity.user.User;
 import java.util.ArrayList;
 import java.util.Collection;
 
+@Getter
 @RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails {
 

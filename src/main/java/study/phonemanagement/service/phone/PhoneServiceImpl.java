@@ -14,6 +14,7 @@ import study.phonemanagement.entity.phone.Phone;
 import study.phonemanagement.exception.phone.PhoneNotFoundException;
 import study.phonemanagement.mapper.phone.PhoneMapper;
 import study.phonemanagement.repository.phone.PhoneRepository;
+import study.phonemanagement.service.phone.response.DetailPhoneResponse;
 import study.phonemanagement.service.phone.response.ListPhoneResponse;
 import study.phonemanagement.service.phone.response.UpdatePhoneResponse;
 
@@ -78,5 +79,12 @@ public class PhoneServiceImpl implements PhoneService {
                 updatePhoneRequest.getQuantity(),
                 updatePhoneRequest.getColor()
         );
+    }
+
+    @Override
+    public DetailPhoneResponse getPhoneForDetail(Long phoneId) {
+        return phoneRepository.findById(phoneId)
+                .map(phoneMapper::toDetailPhoneResponse)
+                .orElseThrow(() -> new PhoneNotFoundException(PHONE_NOT_FOUND.getMessage()));
     }
 }

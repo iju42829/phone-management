@@ -8,8 +8,10 @@ import study.phonemanagement.controller.user.request.CreateUserRequest;
 import study.phonemanagement.entity.user.User;
 import study.phonemanagement.exception.user.AlreadyExistsEmailException;
 import study.phonemanagement.exception.user.AlreadyExistsUsernameException;
+import study.phonemanagement.exception.user.UserNotFoundException;
 import study.phonemanagement.mapper.user.UserMapper;
 import study.phonemanagement.repository.UserRepository;
+import study.phonemanagement.service.user.response.AddressResponse;
 
 import static study.phonemanagement.common.ErrorCode.*;
 import static study.phonemanagement.entity.user.Role.USER;
@@ -17,7 +19,7 @@ import static study.phonemanagement.entity.user.Role.USER;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
@@ -42,4 +44,14 @@ public class UserServiceImpl implements UserService{
 
         return user.getId();
     }
+
+    @Override
+    public AddressResponse getUserAddress(CustomUserDetails customUserDetails) {
+        User user = userRepository
+                .findById(customUserDetails.getUser().getId())
+                .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND.getMessage()));
+
+        return userMapper.toAddressResponse(user);
+    }
+
 }

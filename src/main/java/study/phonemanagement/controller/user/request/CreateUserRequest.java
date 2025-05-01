@@ -28,4 +28,15 @@ public class CreateUserRequest {
     @Email
     @NotBlank
     private String email;
+
+    @NotBlank
+    private String city;
+
+    @NotBlank
+    private String street;
+
+    @NotBlank
+    private String zipcode;
+
+    private String detail;
 }

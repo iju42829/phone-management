@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import study.phonemanagement.IntegrationTestSupport;
+import study.phonemanagement.entity.common.Address;
 import study.phonemanagement.entity.user.Gender;
 import study.phonemanagement.entity.user.Role;
 import study.phonemanagement.entity.user.User;
@@ -50,6 +51,10 @@ class UserRepositoryTest extends IntegrationTestSupport {
                         User::getGender, User::getRole, User::getEmail)
                 .contains(user1.getId(), user1.getUsername(), user1.getPassword(),
                         user1.getGender(), user1.getRole(), user1.getEmail());
+
+        assertThat(user.getAddress())
+                .extracting(Address::getCity, Address::getStreet, Address::getZipcode, Address::getDetail)
+                .containsExactly(user1.getAddress().getCity(), user1.getAddress().getStreet(), user1.getAddress().getZipcode(), user1.getAddress().getDetail());
     }
 
     @Test
@@ -89,6 +94,7 @@ class UserRepositoryTest extends IntegrationTestSupport {
                 .gender(gender)
                 .role(role)
                 .email(email)
+                .address(new Address("testCity", "testStreet", "testZipcode", "testDetail"))
                 .build();
     }
 }
