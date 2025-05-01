@@ -11,9 +11,15 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
     properties:
       hibernate:
         format_sql: true
 
     open-in-view: false
+
+logging:
+  level:
+    study:
+      phonemanagement: debug
+
+    org.hibernate.SQL: debug
