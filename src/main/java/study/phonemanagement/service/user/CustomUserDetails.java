@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import study.phonemanagement.entity.user.User;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,7 +12,9 @@ import java.util.Collection;
 @RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails {
 
-    private final User user;
+    private final String username;
+    private final String password;
+    private final String key;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -22,7 +23,7 @@ public class CustomUserDetails implements UserDetails {
         collection.add(new GrantedAuthority() {
             @Override
             public String getAuthority() {
-                return user.getRole().getKey();
+                return key;
             }
         });
 
@@ -31,11 +32,11 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return password;
     }
 
     @Override
     public String getUsername() {
-        return user.getUsername();
+        return username;
     }
 }

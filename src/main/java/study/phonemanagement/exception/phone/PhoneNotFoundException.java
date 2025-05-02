@@ -1,9 +1,17 @@
 package study.phonemanagement.exception.phone;
 
+import lombok.Getter;
+import study.phonemanagement.common.ErrorCode;
+
 import java.util.NoSuchElementException;
 
+@Getter
 public class PhoneNotFoundException extends NoSuchElementException {
-    public PhoneNotFoundException(String s) {
-        super(s);
+
+    private final ErrorCode errorCode;
+
+    public PhoneNotFoundException(ErrorCode errorCode) {
+        super(errorCode.getMessage());
+        this.errorCode = errorCode;
     }
 }

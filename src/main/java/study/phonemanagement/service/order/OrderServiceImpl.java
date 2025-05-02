@@ -40,7 +40,7 @@ public class OrderServiceImpl implements OrderService {
         for (CreateOrderPhoneRequest createOrderPhoneRequest : createOrderRequest.getCreateOrderPhoneRequestList()) {
             Phone phone = phoneRepository
                     .findById(createOrderPhoneRequest.getPhoneId()).
-                    orElseThrow(() -> new PhoneNotFoundException(PHONE_NOT_FOUND.getMessage()));
+                    orElseThrow(() -> new PhoneNotFoundException(PHONE_NOT_FOUND));
 
             OrderPhone orderPhone = OrderPhone.createOrderPhone(phone, createOrderPhoneRequest.getCount(), phone.getPrice());
 
@@ -48,8 +48,8 @@ public class OrderServiceImpl implements OrderService {
         }
 
         User user = userRepository
-                .findById(customUserDetails.getUser().getId())
-                .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND.getMessage()));
+                .findByUsername(customUserDetails.getUsername())
+                .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
 
         Delivery delivery = Delivery.createDelivery(
                 createOrderRequest.getDelivery().getCity(),

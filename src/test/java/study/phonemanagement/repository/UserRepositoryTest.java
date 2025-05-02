@@ -43,7 +43,7 @@ class UserRepositoryTest extends IntegrationTestSupport {
         // when
         User user = userRepository
                 .findByUsername(user1.getUsername())
-                .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND.getMessage()));
+                .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
 
         // then
         assertThat(user)

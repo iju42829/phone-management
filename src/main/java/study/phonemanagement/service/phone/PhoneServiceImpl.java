@@ -52,7 +52,7 @@ public class PhoneServiceImpl implements PhoneService {
     @Override
     public void deletePhone(Long phoneId) {
         Phone phone = phoneRepository.findById(phoneId)
-                .orElseThrow(() -> new PhoneNotFoundException(PHONE_NOT_FOUND.getMessage()));
+                .orElseThrow(() -> new PhoneNotFoundException(PHONE_NOT_FOUND));
 
         phone.delete();
     }
@@ -61,14 +61,14 @@ public class PhoneServiceImpl implements PhoneService {
     public UpdatePhoneResponse getPhoneForUpdate(Long phoneId) {
         return phoneRepository.findById(phoneId)
                 .map(phoneMapper::toUpdatePhoneResponse)
-                .orElseThrow(() -> new PhoneNotFoundException(PHONE_NOT_FOUND.getMessage()));
+                .orElseThrow(() -> new PhoneNotFoundException(PHONE_NOT_FOUND));
     }
 
     @Override
     public void update(Long phoneId, UpdatePhoneRequest updatePhoneRequest) {
         Phone phone = phoneRepository
                 .findById(phoneId)
-                .orElseThrow(() -> new PhoneNotFoundException(PHONE_NOT_FOUND.getMessage()));
+                .orElseThrow(() -> new PhoneNotFoundException(PHONE_NOT_FOUND));
 
         phone.update(
                 updatePhoneRequest.getName(),
@@ -85,6 +85,6 @@ public class PhoneServiceImpl implements PhoneService {
     public DetailPhoneResponse getPhoneForDetail(Long phoneId) {
         return phoneRepository.findById(phoneId)
                 .map(phoneMapper::toDetailPhoneResponse)
-                .orElseThrow(() -> new PhoneNotFoundException(PHONE_NOT_FOUND.getMessage()));
+                .orElseThrow(() -> new PhoneNotFoundException(PHONE_NOT_FOUND));
     }
 }

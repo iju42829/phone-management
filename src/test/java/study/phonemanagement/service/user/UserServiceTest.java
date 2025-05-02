@@ -44,7 +44,7 @@ class UserServiceTest extends IntegrationTestSupport {
         // then
         User user = userRepository
                 .findById(savedUserId)
-                .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND.getMessage()));
+                .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
 
         assertThat(user)
                 .extracting(User::getId, User::getUsername, User::getPassword,

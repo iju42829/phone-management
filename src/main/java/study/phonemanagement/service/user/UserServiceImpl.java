@@ -28,11 +28,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public Long createUser(CreateUserRequest createUserRequest) {
         if (userRepository.existsByUsername(createUserRequest.getUsername())) {
-            throw new AlreadyExistsUsernameException(USER_DUPLICATE_USERNAME.getMessage());
+            throw new AlreadyExistsUsernameException(USER_DUPLICATE_USERNAME);
         }
 
         if (userRepository.existsByEmail(createUserRequest.getEmail())) {
-            throw new AlreadyExistsEmailException(USER_DUPLICATE_EMAIL.getMessage());
+            throw new AlreadyExistsEmailException(USER_DUPLICATE_EMAIL);
         }
 
         String encodedPassword = passwordEncoder.encode(createUserRequest.getPassword());
@@ -48,8 +48,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public AddressResponse getUserAddress(CustomUserDetails customUserDetails) {
         User user = userRepository
-                .findById(customUserDetails.getUser().getId())
-                .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND.getMessage()));
+                .findByUsername(customUserDetails.getUsername())
+                .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
 
         return userMapper.toAddressResponse(user);
     }

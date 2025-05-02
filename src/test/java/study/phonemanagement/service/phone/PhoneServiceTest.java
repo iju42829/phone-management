@@ -60,7 +60,7 @@ class PhoneServiceTest extends IntegrationTestSupport {
         Long savedPhoneId = phoneService.createPhone(createPhoneRequest);
 
         // then
-        Phone phone = phoneRepository.findById(savedPhoneId).orElseThrow(() -> new PhoneNotFoundException(PHONE_NOT_FOUND.getMessage()));
+        Phone phone = phoneRepository.findById(savedPhoneId).orElseThrow(() -> new PhoneNotFoundException(PHONE_NOT_FOUND));
 
         assertThat(phone)
                 .extracting(Phone::getName, Phone::getManufacturer, Phone::getStorage,
@@ -131,6 +131,7 @@ class PhoneServiceTest extends IntegrationTestSupport {
         assertThatThrownBy(() -> phoneService.getPhoneForUpdate(1L))
                 .isInstanceOf(PhoneNotFoundException.class)
                 .hasMessage(PHONE_NOT_FOUND.getMessage());
+
     }
 
     @DisplayName("휴대폰 수정을 성공하면 수정된 휴대폰 정보가 저장된다.")
@@ -156,7 +157,7 @@ class PhoneServiceTest extends IntegrationTestSupport {
 
         // then
         Phone findPhone = phoneRepository.findById(phone.getId())
-                .orElseThrow(() -> new PhoneNotFoundException(PHONE_NOT_FOUND.getMessage()));
+                .orElseThrow(() -> new PhoneNotFoundException(PHONE_NOT_FOUND));
 
         assertThat(findPhone)
                 .extracting(Phone::getName, Phone::getManufacturer, Phone::getStorage,
