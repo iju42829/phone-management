@@ -2,6 +2,10 @@ package study.phonemanagement.service.order;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Recover;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import study.phonemanagement.controller.order.request.CreateOrderPhoneRequest;
 import study.phonemanagement.controller.order.request.CreateOrderRequest;
@@ -10,6 +14,7 @@ import study.phonemanagement.entity.order.Order;
 import study.phonemanagement.entity.order.OrderPhone;
 import study.phonemanagement.entity.phone.Phone;
 import study.phonemanagement.entity.user.User;
+import study.phonemanagement.exception.order.OrderOptimisticLockingException;
 import study.phonemanagement.exception.phone.PhoneNotFoundException;
 import study.phonemanagement.exception.user.UserNotFoundException;
 import study.phonemanagement.repository.OrderRepository;
@@ -32,6 +37,11 @@ public class OrderServiceImpl implements OrderService {
     private final UserRepository userRepository;
 
 
+    @Retryable(
+            retryFor = ObjectOptimisticLockingFailureException.class,
+            maxAttempts = 10,
+            backoff = @Backoff(delay = 1500)
+    )
     @Override
     public Long createOrder(CreateOrderRequest createOrderRequest, CustomUserDetails customUserDetails) {
 
@@ -63,5 +73,12 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.save(order);
 
         return order.getId();
+    }
+
+    @Recover
+    public Long recover(ObjectOptimisticLockingFailureException ex, CreateOrderRequest createOrderRequest, CustomUserDetails customUserDetails) {
+        Long phoneId = createOrderRequest.getCreateOrderPhoneRequestList().get(0).getPhoneId();
+
+        throw new OrderOptimisticLockingException(ex, ORDER_CONCURRENCY_FAILURE, phoneId);
     }
 }

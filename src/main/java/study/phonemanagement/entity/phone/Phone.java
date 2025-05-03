@@ -43,6 +43,9 @@ public class Phone extends BaseEntity {
 
     private LocalDateTime deletedAt;
 
+    @Version
+    private Long version;
+
     @Builder
     private Phone(String name, Manufacturer manufacturer, Storage storage, Status status, Integer price, Integer quantity, String color) {
         this.name = name;
