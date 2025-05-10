@@ -60,4 +60,46 @@ class PhoneTest {
         // then
         assertThat(phone.getDeletedAt()).isNotNull();
     }
+
+    @DisplayName("수량 감소 로직 실행 시, 현재 수량에서 전달된 수량만큼 차감된다")
+    @Test
+    void reduceQuantity() {
+        // given
+        Phone phone = Phone.builder()
+                .name("testPhone")
+                .manufacturer(SAMSUNG)
+                .storage(STORAGE_128)
+                .status(AVAILABLE)
+                .price(10000)
+                .quantity(10)
+                .color("testColor")
+                .build();
+
+        // when
+        phone.reduceQuantity(3);
+
+        // then
+        assertThat(phone.getQuantity()).isEqualTo(7);
+    }
+
+    @DisplayName("수량 증가 로직 실행 시, 현재 수량에서 전달된 수량만큼 증가된다")
+    @Test
+    void addQuantity() {
+        // given
+        Phone phone = Phone.builder()
+                .name("testPhone")
+                .manufacturer(SAMSUNG)
+                .storage(STORAGE_128)
+                .status(AVAILABLE)
+                .price(10000)
+                .quantity(10)
+                .color("testColor")
+                .build();
+
+        // when
+        phone.addQuantity(3);
+
+        // then
+        assertThat(phone.getQuantity()).isEqualTo(13);
+    }
 }

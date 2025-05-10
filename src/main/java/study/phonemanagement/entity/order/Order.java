@@ -67,7 +67,7 @@ public class Order extends BaseEntity {
     public int getTotalPrice() {
         int totalPrice = 0;
         for (OrderPhone orderPhone : orderPhones) {
-            totalPrice += orderPhone.getOrderPrice();
+            totalPrice += orderPhone.getOrderPrice() * orderPhone.getCount();
         }
 
         return totalPrice;
