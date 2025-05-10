@@ -7,6 +7,7 @@ import study.phonemanagement.IntegrationTestSupport;
 import study.phonemanagement.controller.user.request.CreateUserRequest;
 import study.phonemanagement.entity.common.Address;
 import study.phonemanagement.entity.user.User;
+import study.phonemanagement.service.user.response.AddressResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static study.phonemanagement.entity.user.Gender.MALE;
@@ -52,5 +53,32 @@ class UserMapperTest extends IntegrationTestSupport {
 
         // then
         assertThat(user).isNull();
+    }
+
+    @DisplayName("User의 Address를 toAddressResponse으로 변환한다.")
+    @Test
+    void toAddressResponse() {
+        // given
+        User user = User.builder()
+                .address(new Address("testCity", "testStreet", "testZipcode", "testDetail"))
+                .build();
+
+        // when
+        AddressResponse addressResponse = userMapper.toAddressResponse(user);
+
+        // then
+        assertThat(addressResponse)
+                .extracting(AddressResponse::getCity, AddressResponse::getStreet, AddressResponse::getZipcode, AddressResponse::getDetail)
+                .containsExactly(user.getAddress().getCity(), user.getAddress().getStreet(), user.getAddress().getZipcode(), user.getAddress().getDetail());
+    }
+
+    @DisplayName("User가 null 이면 null을 반환한다.")
+    @Test
+    void toAddressResponseWithNull() {
+        // given - when
+        AddressResponse addressResponse = userMapper.toAddressResponse(null);
+
+        // then
+        assertThat(addressResponse).isNull();
     }
 }

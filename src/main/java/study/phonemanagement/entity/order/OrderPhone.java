@@ -23,13 +23,6 @@ public class OrderPhone extends BaseEntity {
     private Integer count;
     private Integer orderPrice;
 
-    @Builder
-    private OrderPhone(Phone phone, Integer count, Integer orderPrice) {
-        this.phone = phone;
-        this.count = count;
-        this.orderPrice = orderPrice;
-    }
-
     public static OrderPhone createOrderPhone(Phone phone, Integer count, Integer orderPrice) {
         OrderPhone orderPhone = new OrderPhone();
         orderPhone.setPhone(phone);

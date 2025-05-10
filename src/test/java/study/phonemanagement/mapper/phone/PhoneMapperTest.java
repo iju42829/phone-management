@@ -1,5 +1,6 @@
 package study.phonemanagement.mapper.phone;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,9 +10,11 @@ import study.phonemanagement.entity.phone.Manufacturer;
 import study.phonemanagement.entity.phone.Phone;
 import study.phonemanagement.entity.phone.Status;
 import study.phonemanagement.entity.phone.Storage;
+import study.phonemanagement.service.phone.response.DetailPhoneResponse;
 import study.phonemanagement.service.phone.response.ListPhoneResponse;
 import study.phonemanagement.service.phone.response.UpdatePhoneResponse;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class PhoneMapperTest extends IntegrationTestSupport {
@@ -132,6 +135,49 @@ class PhoneMapperTest extends IntegrationTestSupport {
     void toUpdatePhoneResponseWithNull() {
         // given - when
         UpdatePhoneResponse phone = phoneMapper.toUpdatePhoneResponse(null);
+
+        // then
+        assertThat(phone).isNull();
+    }
+
+    @DisplayName("Phone을 DetailPhoneResponse 으로 변환한다.")
+    @Test
+    void toDetailPhoneResponse() {
+        // given
+        Phone phone = Phone.builder()
+                .name("testPhone")
+                .manufacturer(Manufacturer.SAMSUNG)
+                .storage(Storage.STORAGE_128)
+                .status(Status.AVAILABLE)
+                .price(10000)
+                .quantity(10)
+                .color("testColor")
+                .build();
+
+        // when
+        DetailPhoneResponse detailPhoneResponse = phoneMapper.toDetailPhoneResponse(phone);
+
+        // then
+        assertThat(detailPhoneResponse)
+                .extracting(
+                        DetailPhoneResponse::getName, DetailPhoneResponse::getManufacturer, DetailPhoneResponse::getStorage, DetailPhoneResponse::getStatus,
+                        DetailPhoneResponse::getPrice, DetailPhoneResponse::getQuantity, DetailPhoneResponse::getColor)
+                .containsExactly(
+                        phone.getName(), phone.getManufacturer(), phone.getStorage(), phone.getStatus(),
+                        phone.getPrice(), phone.getQuantity(), phone.getColor()
+                );
+
+        assertThat(detailPhoneResponse.getCreatedBy()).isNull();
+        assertThat(detailPhoneResponse.getLastModifiedBy()).isNull();
+        assertThat(detailPhoneResponse.getCreatedDate()).isNull();
+        assertThat(detailPhoneResponse.getLastModifiedDate()).isNull();
+    }
+
+    @DisplayName("Phone이 null이면 null을 반환한다.")
+    @Test
+    void toDetailPhoneResponseWithNull() {
+        // given - when
+        DetailPhoneResponse phone = phoneMapper.toDetailPhoneResponse(null);
 
         // then
         assertThat(phone).isNull();
