@@ -25,12 +25,12 @@ public class Cart extends BaseEntity {
     private Phone phone;
 
     @Column(nullable = false)
-    private Integer quantity;
+    private Integer count;
 
     @Builder
-    private Cart(User user, Phone phone, Integer quantity) {
+    private Cart(User user, Phone phone, Integer count) {
         this.user = user;
         this.phone = phone;
-        this.quantity = quantity;
+        this.count = count;
     }
 }

@@ -13,7 +13,10 @@ import study.phonemanagement.mapper.cart.CartMapper;
 import study.phonemanagement.repository.CartRepository;
 import study.phonemanagement.repository.UserRepository;
 import study.phonemanagement.repository.phone.PhoneRepository;
+import study.phonemanagement.service.cart.response.CartResponse;
 import study.phonemanagement.service.user.CustomUserDetails;
+
+import java.util.List;
 
 import static study.phonemanagement.common.ErrorCode.*;
 
@@ -36,10 +39,20 @@ public class CartServiceImpl implements CartService {
         Phone phone = phoneRepository.findById(createCartRequest.getPhoneId())
                 .orElseThrow(() -> new PhoneNotFoundException(PHONE_NOT_FOUND));
 
-        Cart cart = cartMapper.toCart(phone, user, createCartRequest.getQuantity());
+        Cart cart = cartMapper.toCart(phone, user, createCartRequest.getCount());
 
         cartRepository.save(cart);
 
         return cart.getId();
+    }
+
+    @Override
+    public List<CartResponse> getCartList(CustomUserDetails customUserDetails) {
+        User user = userRepository.findByUsername(customUserDetails.getUsername())
+                .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
+
+        return cartRepository.findAllByUser(user).stream()
+                .map(cartMapper::toCartResponse)
+                .toList();
     }
 }

@@ -9,36 +9,35 @@
 
 <div class="container py-5" style="max-width: 720px;">
     <h2 class="mb-5 text-center fw-bold">주문하기</h2>
-
     <form th:action="@{/orders}" th:object="${order}" method="post">
+
+        <!-- 상품 리스트 -->
         <div class="mb-5">
             <h4 class="mb-3 border-bottom pb-2">상품 내역</h4>
             <div th:each="dto, idx : *{createOrderPhoneRequestList}" class="mb-4">
                 <div class="card border-0 shadow-sm">
                     <div class="card-body">
-                        <h5 class="card-title" th:text="${phone[__${idx.index}__].name}">상품명</h5>
+                        <h5 class="card-title" th:text="${phone[__${idx.index}__].name}"></h5>
                         <p class="card-text text-muted">
-                            제조사: <span th:text="${phone[__${idx.index}__].manufacturer}">제조사</span><br>
-                            용량: <span th:text="${phone[__${idx.index}__].storage}">용량</span><br>
-                            가격: <strong th:text="${phone[__${idx.index}__].price}">0</strong>원<br>
-                            재고: <span th:text="${phone[__${idx.index}__].quantity}">0</span>대
+                            제조사: <span th:text="${phone[__${idx.index}__].manufacturer}"></span><br>
+                            용량: <span th:text="${phone[__${idx.index}__].storage}"></span><br>
+                            가격: <strong th:text="${phone[__${idx.index}__].price}"></strong>원<br>
                         </p>
                         <div class="mb-3">
                             <label class="form-label">수량</label>
                             <input type="hidden"
                                    th:field="*{createOrderPhoneRequestList[__${idx.index}__].phoneId}" />
                             <input type="number"
-                                   id="order-count"
                                    th:field="*{createOrderPhoneRequestList[__${idx.index}__].count}"
                                    class="form-control"
-                                   min="1"
-                                   th:attr="max=${phone[__${idx.index}__].quantity}" />
+                                   min="1"/>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-- 배송 정보 -->
         <div class="mb-5">
             <h4 class="mb-3 border-bottom pb-2">배송 정보</h4>
             <div class="card border-0 shadow-sm">
@@ -67,47 +66,12 @@
             </div>
         </div>
 
+        <!-- 버튼 -->
         <div class="d-grid gap-3">
             <button type="submit" class="btn btn-success btn-lg">주문하기</button>
         </div>
     </form>
-
-    <form th:action="@{/carts}" method="post" id="cart-form">
-
-        <input type="hidden" name="phoneId"
-               th:value="${order.createOrderPhoneRequestList[0].phoneId}" />
-        <input type="hidden" id="cart-count" name="count" value="1" />
-
-        <div class="d-grid gap-3 mt-3">
-            <button id="btn-add-cart"
-                    type="button"
-                    class="btn btn-outline-secondary btn-lg">
-                장바구니 담기
-            </button>
-        </div>
-    </form>
 </div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const btn = document.getElementById('btn-add-cart');
-        const cartForm = document.getElementById('cart-form');
-        const cartCountInput = document.getElementById('cart-count');
-        const orderCountInput = document.getElementById('order-count');
-
-        btn.addEventListener('click', function(e) {
-            e.preventDefault();
-
-            let val = parseInt(orderCountInput.value, 10);
-            if (isNaN(val) || val < 1) {
-                val = 1;
-            }
-
-            cartCountInput.value = val;
-
-            cartForm.submit();
-        });
-    });
-</script>
 </body>
 </html>
+

@@ -6,5 +6,5 @@ import lombok.Setter;
 @Getter @Setter
 public class CreateCartRequest {
     private Long phoneId;
-    private Integer quantity;
+    private Integer count;
 }
