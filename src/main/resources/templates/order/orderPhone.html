@@ -71,7 +71,14 @@
         <!-- 버튼 -->
         <div class="d-grid gap-3">
             <button type="submit" class="btn btn-success btn-lg">주문하기</button>
-            <button type="button" class="btn btn-outline-secondary btn-lg">장바구니 담기</button>
+        </div>
+    </form>
+
+    <form th:action="@{/carts}" method="post">
+        <input type="hidden" name="phoneId" th:value="${order.createOrderPhoneRequestList[0].phoneId}" />
+        <input type="hidden" name="quantity" th:value="${order.createOrderPhoneRequestList[0].count}" />
+        <div class="d-grid gap-3 mt-3">
+            <button type="submit" class="btn btn-outline-secondary btn-lg">장바구니 담기</button>
         </div>
     </form>
 </div>

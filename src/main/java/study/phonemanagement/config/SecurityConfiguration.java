@@ -75,7 +75,7 @@ public class SecurityConfiguration {
         http
                 .formLogin((form) -> form.loginPage("/users/login")
                         .loginProcessingUrl("/users/login")
-                        .defaultSuccessUrl("/").permitAll());
+                        .defaultSuccessUrl("/phones").permitAll());
 
         http
                 .sessionManagement((auth) -> auth
