@@ -64,4 +64,9 @@ public class CartServiceImpl implements CartService {
                     cartRepository.deleteById(createCartOrderPhoneRequest.getCartId());
         });
     }
+
+    @Override
+    public void removeCartItem(Long cartId) {
+        cartRepository.deleteById(cartId);
+    }
 }

@@ -34,6 +34,14 @@
                                    class="form-control"
                                    min="1"/>
                         </div>
+                        <button
+                                type="submit"
+                                th:formaction="@{/carts/{cartId}(cartId=${dto.cartId})}"
+                                formmethod="post"
+                                name="_method" value="delete"
+                                class="btn btn-outline-danger">
+                            삭제하기
+                        </button>
                     </div>
                 </div>
             </div>

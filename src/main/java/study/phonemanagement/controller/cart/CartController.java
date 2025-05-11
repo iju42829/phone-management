@@ -5,10 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import study.phonemanagement.controller.cart.request.CreateCartOrderPhoneRequest;
 import study.phonemanagement.controller.cart.request.CreateCartOrderRequest;
 import study.phonemanagement.controller.cart.request.CreateCartRequest;
@@ -55,5 +52,12 @@ public class CartController {
         model.addAttribute("phone", cartItems);
 
         return "cart/cartList";
+    }
+
+    @DeleteMapping("/{cartId}")
+    public String deleteCartItem(@PathVariable Long cartId) {
+        cartService.removeCartItem(cartId);
+
+        return "redirect:/carts";
     }
 }

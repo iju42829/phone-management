@@ -11,4 +11,5 @@ public interface CartService {
     Long createCart(CreateCartRequest createCartRequest, CustomUserDetails customUserDetails);
     List<CartResponse> getCartList(CustomUserDetails customUserDetails);
     void clearCartAfterOrder(CreateCartOrderRequest createCartOrderRequest);
+    void removeCartItem(Long cartId);
 }
