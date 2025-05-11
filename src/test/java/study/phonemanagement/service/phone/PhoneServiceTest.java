@@ -16,6 +16,7 @@ import study.phonemanagement.entity.phone.Status;
 import study.phonemanagement.entity.phone.Storage;
 import study.phonemanagement.exception.phone.PhoneNotFoundException;
 import study.phonemanagement.repository.phone.PhoneRepository;
+import study.phonemanagement.service.phone.response.DetailPhoneResponse;
 import study.phonemanagement.service.phone.response.ListPhoneResponse;
 import study.phonemanagement.service.phone.response.UpdatePhoneResponse;
 
@@ -234,6 +235,34 @@ class PhoneServiceTest extends IntegrationTestSupport {
                 .quantity(quantity)
                 .color(color)
                 .build();
+    }
+
+    @DisplayName("존재하는 ID로 호출하면 휴대폰 상세 정보를 가져온다")
+    @Test
+    void getPhoneForDetail() {
+        // given
+        Phone phone = createPhoneEntity("testPhone", SAMSUNG, STORAGE_128, AVAILABLE, 10000, 10, "testColor");
+
+        phoneRepository.save(phone);
+
+        // when
+        DetailPhoneResponse phoneResponse = phoneService.getPhoneForDetail(phone.getId());
+
+        // then
+        assertThat(phoneResponse)
+                .extracting(DetailPhoneResponse::getName, DetailPhoneResponse::getManufacturer, DetailPhoneResponse::getStorage,
+                        DetailPhoneResponse::getStatus, DetailPhoneResponse::getPrice, DetailPhoneResponse::getQuantity, DetailPhoneResponse::getColor)
+                .containsExactly(phone.getName(), phone.getManufacturer(), phone.getStorage(),
+                        phone.getStatus(), phone.getPrice(), phone.getQuantity(), phone.getColor());
+    }
+
+    @DisplayName("존재하지 않는 ID로 호출하면 예외가 발생한다.")
+    @Test
+    void getPhoneForDetailNotFound() {
+        // given - when - then
+        assertThatThrownBy(() -> phoneService.getPhoneForDetail(1L))
+                .isInstanceOf(PhoneNotFoundException.class)
+                .hasMessage(PHONE_NOT_FOUND.getMessage());
     }
 }
 

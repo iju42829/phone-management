@@ -12,6 +12,7 @@ import study.phonemanagement.exception.user.AlreadyExistsEmailException;
 import study.phonemanagement.exception.user.AlreadyExistsUsernameException;
 import study.phonemanagement.exception.user.UserNotFoundException;
 import study.phonemanagement.repository.UserRepository;
+import study.phonemanagement.service.user.response.AddressResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -87,6 +88,35 @@ class UserServiceTest extends IntegrationTestSupport {
         assertThatThrownBy(() -> userService.createUser(testUser))
                 .isInstanceOf(AlreadyExistsEmailException.class)
                 .hasMessage(USER_DUPLICATE_EMAIL.getMessage());
+    }
+
+    @DisplayName("로그인된 사용자 정보를 통해 주소를 반환한다.")
+    @Test
+    void getUserAddress() {
+        // given
+        CreateUserRequest createUserRequest = createTestUser("test", "test@test");
+        userService.createUser(createUserRequest);
+        CustomUserDetails customUserDetails = new CustomUserDetails(createUserRequest.getUsername(), createUserRequest.getPassword(), USER.getKey());
+
+        // when
+        AddressResponse userAddress = userService.getUserAddress(customUserDetails);
+
+        // then
+        assertThat(userAddress)
+            .extracting(AddressResponse::getCity, AddressResponse::getStreet, AddressResponse::getZipcode, AddressResponse::getDetail)
+            .containsExactly(createUserRequest.getCity(), createUserRequest.getStreet(), createUserRequest.getZipcode(), createUserRequest.getDetail());
+    }
+
+    @DisplayName("유효하지 않는 사용자인 경우 예외가 발생합니다.")
+    @Test
+    void getUserAddressWithInvalidUser() {
+        // given
+        CustomUserDetails customUserDetails = new CustomUserDetails("invalidUser", "invalidUser", USER.getKey());
+
+        // when - then
+        assertThatThrownBy(() -> userService.getUserAddress(customUserDetails))
+                .isInstanceOf(UserNotFoundException.class)
+                .hasMessage(USER_NOT_FOUND.getMessage());
     }
 
     private static CreateUserRequest createTestUser(String username, String email) {
