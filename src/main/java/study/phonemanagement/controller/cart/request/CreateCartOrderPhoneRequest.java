@@ -1,4 +1,4 @@
-package study.phonemanagement.controller.order.request;
+package study.phonemanagement.controller.cart.request;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -6,11 +6,13 @@ import lombok.Setter;
 
 @Getter @Setter
 @NoArgsConstructor
-public class CreateOrderPhoneRequest {
+public class CreateCartOrderPhoneRequest {
+    private Long cartId;
     private Long phoneId;
     private Integer count;
 
-    public CreateOrderPhoneRequest(Long phoneId, int count) {
+    public CreateCartOrderPhoneRequest(Long cartId, Long phoneId, int count) {
+        this.cartId = cartId;
         this.phoneId = phoneId;
         this.count = count;
     }

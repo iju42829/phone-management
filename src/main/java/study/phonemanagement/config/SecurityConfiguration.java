@@ -7,6 +7,7 @@ import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -75,7 +76,9 @@ public class SecurityConfiguration {
         http
                 .formLogin((form) -> form.loginPage("/users/login")
                         .loginProcessingUrl("/users/login")
-                        .defaultSuccessUrl("/").permitAll());
+                        .defaultSuccessUrl("/phones").permitAll());
+
+        http.csrf(AbstractHttpConfigurer::disable);
 
         http
                 .sessionManagement((auth) -> auth

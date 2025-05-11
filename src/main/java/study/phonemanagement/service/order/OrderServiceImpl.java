@@ -7,6 +7,8 @@ import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Recover;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
+import study.phonemanagement.controller.cart.request.CreateCartOrderPhoneRequest;
+import study.phonemanagement.controller.cart.request.CreateCartOrderRequest;
 import study.phonemanagement.controller.order.request.CreateOrderPhoneRequest;
 import study.phonemanagement.controller.order.request.CreateOrderRequest;
 import study.phonemanagement.entity.order.Delivery;
@@ -80,5 +82,47 @@ public class OrderServiceImpl implements OrderService {
         Long phoneId = createOrderRequest.getCreateOrderPhoneRequestList().get(0).getPhoneId();
 
         throw new OrderOptimisticLockingException(ex, ORDER_CONCURRENCY_FAILURE, phoneId);
+    }
+
+    @Retryable(
+            retryFor = ObjectOptimisticLockingFailureException.class,
+            maxAttempts = 10,
+            backoff = @Backoff(delay = 1500)
+    )
+    @Override
+    public Long createOrderByCart(CreateCartOrderRequest createCartOrderRequest, CustomUserDetails customUserDetails) {
+        List<OrderPhone> orderPhoneList = new ArrayList<>();
+
+        for (CreateCartOrderPhoneRequest createCartOrderPhoneRequest : createCartOrderRequest.getCreateCartOrderPhoneRequests()) {
+            Phone phone = phoneRepository
+                    .findById(createCartOrderPhoneRequest.getPhoneId()).
+                    orElseThrow(() -> new PhoneNotFoundException(PHONE_NOT_FOUND));
+
+            OrderPhone orderPhone = OrderPhone.createOrderPhone(phone, createCartOrderPhoneRequest.getCount(), phone.getPrice());
+
+            orderPhoneList.add(orderPhone);
+        }
+
+        User user = userRepository
+                    .findByUsername(customUserDetails.getUsername())
+                    .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
+
+        Delivery delivery = Delivery.createDelivery(
+                createCartOrderRequest.getDelivery().getCity(),
+                createCartOrderRequest.getDelivery().getStreet(),
+                createCartOrderRequest.getDelivery().getZipcode(),
+                createCartOrderRequest.getDelivery().getDetail()
+        );
+
+        Order order = Order.createOrder(user, delivery, orderPhoneList);
+
+        orderRepository.save(order);
+
+        return order.getId();
+    }
+
+    @Recover
+    public Long recover(ObjectOptimisticLockingFailureException ex, CreateCartOrderRequest createOrderRequest, CustomUserDetails customUserDetails) {
+        throw new OrderOptimisticLockingException(ex, ORDER_CONCURRENCY_FAILURE, null);
     }
 }
