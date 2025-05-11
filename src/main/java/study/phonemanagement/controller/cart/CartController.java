@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import study.phonemanagement.controller.cart.request.CreateCartOrderPhoneRequest;
+import study.phonemanagement.controller.cart.request.CreateCartOrderRequest;
 import study.phonemanagement.controller.cart.request.CreateCartRequest;
 import study.phonemanagement.controller.order.request.CreateOrderDeliveryRequest;
-import study.phonemanagement.controller.order.request.CreateOrderPhoneRequest;
-import study.phonemanagement.controller.order.request.CreateOrderRequest;
 import study.phonemanagement.service.cart.CartService;
 import study.phonemanagement.service.cart.response.CartResponse;
 import study.phonemanagement.service.user.CustomUserDetails;
@@ -37,17 +37,17 @@ public class CartController {
         return "redirect:/phones";
     }
 
-    @GetMapping("/cart")
+    @GetMapping
     public String viewCart(@AuthenticationPrincipal CustomUserDetails customUserDetails, Model model) {
         List<CartResponse> cartItems = cartService.getCartList(customUserDetails);
         AddressResponse addressResponse = userService.getUserAddress(customUserDetails);
 
-        CreateOrderRequest orderRequest = new CreateOrderRequest();
-        List<CreateOrderPhoneRequest> phones = cartItems.stream()
-                .map(item -> new CreateOrderPhoneRequest(item.getPhoneId(), item.getCount()))
+        CreateCartOrderRequest orderRequest = new CreateCartOrderRequest();
+        List<CreateCartOrderPhoneRequest> phones = cartItems.stream()
+                .map(item -> new CreateCartOrderPhoneRequest(item.getCartId(), item.getPhoneId(), item.getCount()))
                 .toList();
 
-        orderRequest.setCreateOrderPhoneRequestList(phones);
+        orderRequest.setCreateCartOrderPhoneRequests(phones);
         orderRequest.setDelivery(CreateOrderDeliveryRequest
                 .createOrderDeliveryRequest(addressResponse.getCity(), addressResponse.getStreet(), addressResponse.getZipcode(), addressResponse.getDetail()));
 

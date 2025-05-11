@@ -9,14 +9,16 @@
 
 <div class="container py-5" style="max-width: 720px;">
     <h2 class="mb-5 text-center fw-bold">주문하기</h2>
-    <form th:action="@{/orders}" th:object="${order}" method="post">
+    <form th:action="@{/orders/carts}" th:object="${order}" method="post">
 
         <!-- 상품 리스트 -->
         <div class="mb-5">
             <h4 class="mb-3 border-bottom pb-2">상품 내역</h4>
-            <div th:each="dto, idx : *{createOrderPhoneRequestList}" class="mb-4">
+            <div th:each="dto, idx : *{createCartOrderPhoneRequests}" class="mb-4">
                 <div class="card border-0 shadow-sm">
                     <div class="card-body">
+                        <input type="hidden" th:field="*{createCartOrderPhoneRequests[__${idx.index}__].cartId}">
+
                         <h5 class="card-title" th:text="${phone[__${idx.index}__].name}"></h5>
                         <p class="card-text text-muted">
                             제조사: <span th:text="${phone[__${idx.index}__].manufacturer}"></span><br>
@@ -26,9 +28,9 @@
                         <div class="mb-3">
                             <label class="form-label">수량</label>
                             <input type="hidden"
-                                   th:field="*{createOrderPhoneRequestList[__${idx.index}__].phoneId}" />
+                                   th:field="*{createCartOrderPhoneRequests[__${idx.index}__].phoneId}" />
                             <input type="number"
-                                   th:field="*{createOrderPhoneRequestList[__${idx.index}__].count}"
+                                   th:field="*{createCartOrderPhoneRequests[__${idx.index}__].count}"
                                    class="form-control"
                                    min="1"/>
                         </div>

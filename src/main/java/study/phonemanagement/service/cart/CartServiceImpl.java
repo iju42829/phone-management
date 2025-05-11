@@ -3,6 +3,7 @@ package study.phonemanagement.service.cart;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import study.phonemanagement.controller.cart.request.CreateCartOrderRequest;
 import study.phonemanagement.controller.cart.request.CreateCartRequest;
 import study.phonemanagement.entity.cart.Cart;
 import study.phonemanagement.entity.phone.Phone;
@@ -54,5 +55,13 @@ public class CartServiceImpl implements CartService {
         return cartRepository.findAllByUser(user).stream()
                 .map(cartMapper::toCartResponse)
                 .toList();
+    }
+
+    @Override
+    public void clearCartAfterOrder(CreateCartOrderRequest createCartOrderRequest) {
+        createCartOrderRequest.getCreateCartOrderPhoneRequests()
+                .forEach(createCartOrderPhoneRequest -> {
+                    cartRepository.deleteById(createCartOrderPhoneRequest.getCartId());
+        });
     }
 }
