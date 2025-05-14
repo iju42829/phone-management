@@ -11,6 +11,7 @@ public enum ErrorCode {
     USER_DUPLICATE_USERNAME(HttpStatus.CONFLICT,"이미 사용 중인 아이디입니다.", "/users/join"),
     USER_DUPLICATE_EMAIL(HttpStatus.CONFLICT,"이미 사용 중인 이메일입니다.", "/users/join"),
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 사용자를 찾을 수 없습니다.", "/users/login"),
+    ADMIN_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 관리자가 존재합니다.", "/admin/signup"),
 
     // PHONE
     PHONE_NOT_FOUND(HttpStatus.NOT_FOUND,"휴대폰을 찾을 수 없습니다.", "/phones"),

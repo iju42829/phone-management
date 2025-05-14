@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/base :: common_header(~{::title})}">
+    <meta charset="UTF-8">
+    <title>관리자 - 회원가입</title>
+</head>
+<body class="bg-light d-flex justify-content-center align-items-center" style="height: 100vh;">
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h4 class="card-title mb-4 text-center">관리자 - 회원가입</h4>
+                    <form th:action th:object="${createUserRequest}" th:method="post">
+                        <div class="mb-3">
+                            <label class="form-label">아이디</label>
+                            <input type="text" class="form-control" th:field="*{username}" placeholder="아이디를 입력하세요.">
+                            <div class="text-danger small" th:errors="*{username}"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">비밀번호</label>
+                            <input type="password" class="form-control" th:field="*{password}" placeholder="비밀번호를 입력하세요.">
+                            <div class="text-danger small" th:errors="*{password}"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">비밀번호 확인</label>
+                            <input type="password" class="form-control" th:field="*{confirmPassword}" placeholder="비밀번호를 한 번 더 입력해주세요">
+                            <div class="text-danger small" th:errors="*{confirmPassword}"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">이메일</label>
+                            <input type="text" class="form-control" th:field="*{email}" placeholder="이메일을 입력하세요.">
+                            <div class="text-danger small" th:errors="*{email}"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label d-block">성별</label>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" th:field="*{gender}" value="MALE" id="male">
+                                <label class="form-check-label" for="male">남성</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" th:field="*{gender}" value="FEMALE" id="female">
+                                <label class="form-check-label" for="female">여성</label>
+                            </div>
+                            <div class="text-danger small" th:errors="*{gender}"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">도시</label>
+                            <input type="text"
+                                   class="form-control"
+                                   th:field="*{city}"
+                                   placeholder="도시를 입력하세요.">
+                            <div class="text-danger small" th:errors="*{city}"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">도로명 주소</label>
+                            <input type="text"
+                                   class="form-control"
+                                   th:field="*{street}"
+                                   placeholder="도로명 주소를 입력하세요.">
+                            <div class="text-danger small" th:errors="*{street}"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">우편번호</label>
+                            <input type="text"
+                                   class="form-control"
+                                   th:field="*{zipcode}"
+                                   placeholder="우편번호를 입력하세요.">
+                            <div class="text-danger small" th:errors="*{zipcode}"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">상세주소</label>
+                            <input type="text"
+                                   class="form-control"
+                                   th:field="*{detail}"
+                                   placeholder="상세주소를 입력하세요. (선택)">
+                            <div class="text-danger small" th:errors="*{detail}"></div>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">회원가입</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

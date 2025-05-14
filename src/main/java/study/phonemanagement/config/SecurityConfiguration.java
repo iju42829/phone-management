@@ -34,7 +34,9 @@ public class SecurityConfiguration {
     public SecurityFilterChain adminFilterChain(HttpSecurity http) throws Exception {
         http
                 .securityMatcher("/admin/**")
-                .authorizeHttpRequests(auth -> auth.anyRequest().hasRole(ADMIN.name()))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/admin/signup").permitAll()
+                        .anyRequest().hasRole(ADMIN.name()))
                 .formLogin(form -> form.loginPage("/admin/login")
                         .loginProcessingUrl("/admin/login")
                         .defaultSuccessUrl("/admin/phones")
