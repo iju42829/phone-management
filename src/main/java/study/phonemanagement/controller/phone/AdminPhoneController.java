@@ -3,6 +3,8 @@ package study.phonemanagement.controller.phone;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -14,6 +16,7 @@ import study.phonemanagement.entity.phone.Manufacturer;
 import study.phonemanagement.entity.phone.Status;
 import study.phonemanagement.entity.phone.Storage;
 import study.phonemanagement.service.phone.PhoneService;
+import study.phonemanagement.service.phone.response.CachedListPhoneResponse;
 import study.phonemanagement.service.phone.response.ListPhoneResponse;
 import study.phonemanagement.service.phone.response.UpdatePhoneResponse;
 
@@ -50,7 +53,13 @@ public class AdminPhoneController {
                                 @RequestParam(defaultValue = "1") Integer pageNumber,
                                 @RequestParam(defaultValue = "20") Integer pageSize,
                                 Model model) {
-        Page<ListPhoneResponse> page = phoneService.getAllPhones(searchWord, manufacturer, pageNumber, pageSize);
+        CachedListPhoneResponse cachedPage = phoneService.getAllPhones(searchWord, manufacturer, pageNumber, pageSize);
+
+        Page<ListPhoneResponse> page = new PageImpl<>(
+                cachedPage.getContent(), PageRequest.of(cachedPage.getPageNumber() - 1,
+                cachedPage.getPageSize()),
+                cachedPage.getTotalElements()
+        );
 
         int blockSize  = 10;
         int current    = page.getNumber() + 1;

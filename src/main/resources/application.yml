@@ -17,9 +17,15 @@ spring:
 
     open-in-view: false
 
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+
 logging:
   level:
     study:
       phonemanagement: debug
 
     org.hibernate.SQL: debug
+    org.springframework.cache: trace
