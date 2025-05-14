@@ -31,7 +31,7 @@ public class AdminInitController {
     public String join(@Validated @ModelAttribute CreateUserRequest createUserRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             log.info("bindingResult: {}", bindingResult);
-            return "users/join";
+            return "users/adminJoin";
         }
 
         adminUserService.createAdminUser(createUserRequest);
