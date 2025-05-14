@@ -1,6 +1,7 @@
 package study.phonemanagement.service.phone;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +15,7 @@ import study.phonemanagement.entity.phone.Phone;
 import study.phonemanagement.exception.phone.PhoneNotFoundException;
 import study.phonemanagement.mapper.phone.PhoneMapper;
 import study.phonemanagement.repository.phone.PhoneRepository;
+import study.phonemanagement.service.phone.response.CachedListPhoneResponse;
 import study.phonemanagement.service.phone.response.DetailPhoneResponse;
 import study.phonemanagement.service.phone.response.ListPhoneResponse;
 import study.phonemanagement.service.phone.response.UpdatePhoneResponse;
@@ -29,15 +31,23 @@ public class PhoneServiceImpl implements PhoneService {
     private final PhoneMapper phoneMapper;
 
     @Override
-    public Page<ListPhoneResponse> getAllPhones(String searchWord, Manufacturer manufacturer, Integer pageNumber, Integer pageSize) {
+    @Cacheable(cacheNames = "getPhones", key = "'phones:pageNumber' + #pageNumber + ':pageSize:' + #pageSize", cacheManager = "cacheManager")
+    public CachedListPhoneResponse getAllPhones(String searchWord, Manufacturer manufacturer, Integer pageNumber, Integer pageSize) {
         Pageable pageable = PageRequest.of(
                 pageNumber - 1,
                 pageSize,
                 Sort.by(Sort.Direction.DESC, "createdDate")
         );
 
-        return phoneRepository.findAllPhone(searchWord, manufacturer, pageable)
+        Page<ListPhoneResponse> page = phoneRepository.findAllPhone(searchWord, manufacturer, pageable)
                 .map(phoneMapper::toPhoneListResponse);
+
+        return CachedListPhoneResponse.builder()
+                .content(page.getContent())
+                .pageNumber(page.getNumber() + 1)
+                .pageSize(page.getSize())
+                .totalElements(page.getTotalElements())
+                .build();
     }
 
     @Override
