@@ -11,7 +11,9 @@ services:
   springboot_container:
     build: .
     depends_on:
+      - cache-server
       - mysql-container
+
     restart: always
     ports:
       - "${SERVER_PORT}:${SERVER_PORT}"
@@ -20,3 +22,8 @@ services:
       DB_URL: "${DB_URL}"
       DB_USERNAME: "${DB_USERNAME}"
       DB_PASSWORD: "${DB_PASSWORD}"
+
+  cache-server:
+    image: redis
+    ports:
+      - "${REDIS_PORT}:${REDIS_PORT}"
