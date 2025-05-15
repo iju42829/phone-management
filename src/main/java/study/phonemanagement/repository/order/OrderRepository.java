@@ -1,4 +1,4 @@
-package study.phonemanagement.repository;
+package study.phonemanagement.repository.order;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -9,7 +9,7 @@ import study.phonemanagement.entity.user.User;
 
 import java.util.Optional;
 
-public interface OrderRepository extends JpaRepository<Order, Long> {
+public interface OrderRepository extends JpaRepository<Order, Long>, OrderRepositoryCustom {
 
     @EntityGraph(attributePaths = {"delivery"})
     Optional<Order> findWithDeliveryById(Long id);

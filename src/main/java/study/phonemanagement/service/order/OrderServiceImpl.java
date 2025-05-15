@@ -24,7 +24,7 @@ import study.phonemanagement.exception.order.OrderOptimisticLockingException;
 import study.phonemanagement.exception.phone.PhoneNotFoundException;
 import study.phonemanagement.exception.user.UserNotFoundException;
 import study.phonemanagement.mapper.order.OrderPhoneMapper;
-import study.phonemanagement.repository.OrderRepository;
+import study.phonemanagement.repository.order.OrderRepository;
 import study.phonemanagement.repository.UserRepository;
 import study.phonemanagement.repository.phone.PhoneRepository;
 import study.phonemanagement.service.order.response.OrderListResponse;
@@ -147,6 +147,32 @@ public class OrderServiceImpl implements OrderService {
 
 
         Page<Order> orders = orderRepository.findAllByUser(user, pageable);
+
+        return orders.map(order -> {
+            List<OrderPhoneDetailResponse> phoneDetailResponses = order.getOrderPhones().stream()
+                    .map(orderPhoneMapper::toOrderPhoneDetailResponse)
+                    .toList();
+
+            return OrderListResponse.builder()
+                    .orderId(order.getId())
+                    .orderedAt(order.getCreatedDate())
+                    .orderStatus(order.getStatus().name())
+                    .deliveryStatus(order.getDelivery().getStatus().name())
+                    .totalAmount(order.getTotalPrice())
+                    .orderPhoneDetailResponseList(phoneDetailResponses)
+                    .build();
+        });
+    }
+
+    @Override
+    public Page<OrderListResponse> getOrdersByUsername(String username, int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(
+                pageNumber - 1,
+                pageSize,
+                Sort.by(Sort.Direction.DESC, "createdDate")
+        );
+
+        Page<Order> orders = orderRepository.findAllOrderByUsername(username, pageable);
 
         return orders.map(order -> {
             List<OrderPhoneDetailResponse> phoneDetailResponses = order.getOrderPhones().stream()

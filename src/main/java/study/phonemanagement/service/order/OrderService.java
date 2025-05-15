@@ -10,4 +10,5 @@ public interface OrderService {
     Long createOrder(CreateOrderRequest createOrderRequest, CustomUserDetails user);
     Long createOrderByCart(CreateCartOrderRequest createCartOrderRequest, CustomUserDetails user);
     Page<OrderListResponse> getOrders(CustomUserDetails customUserDetails, Integer pageNumber, Integer pageSize);
+    Page<OrderListResponse> getOrdersByUsername(String username, int pageNumber, int pageSize);
 }
