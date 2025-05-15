@@ -2,6 +2,10 @@ package study.phonemanagement.service.order;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Recover;
@@ -19,9 +23,12 @@ import study.phonemanagement.entity.user.User;
 import study.phonemanagement.exception.order.OrderOptimisticLockingException;
 import study.phonemanagement.exception.phone.PhoneNotFoundException;
 import study.phonemanagement.exception.user.UserNotFoundException;
-import study.phonemanagement.repository.OrderRepository;
+import study.phonemanagement.mapper.order.OrderPhoneMapper;
+import study.phonemanagement.repository.order.OrderRepository;
 import study.phonemanagement.repository.UserRepository;
 import study.phonemanagement.repository.phone.PhoneRepository;
+import study.phonemanagement.service.order.response.OrderListResponse;
+import study.phonemanagement.service.order.response.OrderPhoneDetailResponse;
 import study.phonemanagement.service.user.CustomUserDetails;
 
 import java.util.ArrayList;
@@ -38,6 +45,7 @@ public class OrderServiceImpl implements OrderService {
     private final PhoneRepository phoneRepository;
     private final UserRepository userRepository;
 
+    private final OrderPhoneMapper orderPhoneMapper;
 
     @Retryable(
             retryFor = ObjectOptimisticLockingFailureException.class,
@@ -124,5 +132,61 @@ public class OrderServiceImpl implements OrderService {
     @Recover
     public Long recover(ObjectOptimisticLockingFailureException ex, CreateCartOrderRequest createOrderRequest, CustomUserDetails customUserDetails) {
         throw new OrderOptimisticLockingException(ex, ORDER_CONCURRENCY_FAILURE, null);
+    }
+
+    @Override
+    public Page<OrderListResponse> getOrders(CustomUserDetails customUserDetails, Integer pageNumber, Integer pageSize) {
+        User user = userRepository.findByUsername(customUserDetails.getUsername())
+                .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
+
+        Pageable pageable = PageRequest.of(
+                pageNumber - 1,
+                pageSize,
+                Sort.by(Sort.Direction.DESC, "createdDate")
+        );
+
+
+        Page<Order> orders = orderRepository.findAllByUser(user, pageable);
+
+        return orders.map(order -> {
+            List<OrderPhoneDetailResponse> phoneDetailResponses = order.getOrderPhones().stream()
+                    .map(orderPhoneMapper::toOrderPhoneDetailResponse)
+                    .toList();
+
+            return OrderListResponse.builder()
+                    .orderId(order.getId())
+                    .orderedAt(order.getCreatedDate())
+                    .orderStatus(order.getStatus().name())
+                    .deliveryStatus(order.getDelivery().getStatus().name())
+                    .totalAmount(order.getTotalPrice())
+                    .orderPhoneDetailResponseList(phoneDetailResponses)
+                    .build();
+        });
+    }
+
+    @Override
+    public Page<OrderListResponse> getOrdersByUsername(String username, int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(
+                pageNumber - 1,
+                pageSize,
+                Sort.by(Sort.Direction.DESC, "createdDate")
+        );
+
+        Page<Order> orders = orderRepository.findAllOrderByUsername(username, pageable);
+
+        return orders.map(order -> {
+            List<OrderPhoneDetailResponse> phoneDetailResponses = order.getOrderPhones().stream()
+                    .map(orderPhoneMapper::toOrderPhoneDetailResponse)
+                    .toList();
+
+            return OrderListResponse.builder()
+                    .orderId(order.getId())
+                    .orderedAt(order.getCreatedDate())
+                    .orderStatus(order.getStatus().name())
+                    .deliveryStatus(order.getDelivery().getStatus().name())
+                    .totalAmount(order.getTotalPrice())
+                    .orderPhoneDetailResponseList(phoneDetailResponses)
+                    .build();
+        });
     }
 }

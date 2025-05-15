@@ -11,7 +11,7 @@ import study.phonemanagement.entity.user.User;
 import study.phonemanagement.exception.phone.PhoneNotFoundException;
 import study.phonemanagement.exception.user.UserNotFoundException;
 import study.phonemanagement.mapper.cart.CartMapper;
-import study.phonemanagement.repository.CartRepository;
+import study.phonemanagement.repository.order.CartRepository;
 import study.phonemanagement.repository.UserRepository;
 import study.phonemanagement.repository.phone.PhoneRepository;
 import study.phonemanagement.service.cart.response.CartResponse;

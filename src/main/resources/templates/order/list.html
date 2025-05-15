@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/base :: common_header(~{::title})}">
+    <meta charset="UTF-8">
+    <title>주문 목록</title>
+</head>
+<body>
+<div th:replace="~{layout/navbar :: navbar}"></div>
+
+<div class="container py-4">
+    <h2 class="mb-4">주문 목록</h2>
+
+    <div th:each="order : ${orders}" class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap">
+                <div>
+                    <h5 class="card-title mb-1">
+                        주문 ID: <span th:text="${order.orderId}"></span>
+                    </h5>
+                    <small class="text-muted" th:text="${order.orderedAt}"></small>
+                </div>
+                <div class="d-flex gap-2">
+                    <span class="badge bg-primary fs-6" th:text="${order.orderStatus}"></span>
+                    <span class="badge fs-6"
+                          th:classappend="
+                                ${order.deliveryStatus} == 'READY' ? 'bg-secondary' :
+                                (${order.deliveryStatus} == 'DELIVERED' ? 'bg-warning text-dark' :
+                                (${order.deliveryStatus} == 'COMP' ? 'bg-success' : ''))"
+                          th:text="
+                                ${order.deliveryStatus} == 'READY' ? '준비' :
+                                (${order.deliveryStatus} == 'DELIVERED' ? '배달' :
+                                (${order.deliveryStatus} == 'COMP' ? '완료' : ''))">
+                        준비
+                    </span>
+                </div>
+            </div>
+
+            <ul class="list-group list-group-flush">
+                <li th:each="phone : ${order.orderPhoneDetailResponseList}"
+                    class="list-group-item d-flex justify-content-between">
+                    <div>
+                        <strong th:text="${phone.name}"></strong>
+                        <span class="text-muted"> × <span th:text="${phone.count}"></span></span>
+                    </div>
+                    <div>
+                        <span th:text="${#numbers.formatDecimal(phone.orderPrice, 0, 'COMMA', 0, 'POINT')} + '원'"></span>
+                        <span class="mx-1">→</span>
+                        <strong class="text-dark"
+                                th:text="${#numbers.formatDecimal(phone.count * phone.orderPrice, 0, 'COMMA', 0, 'POINT')} + '원'">
+                        </strong>
+                    </div>
+                </li>
+            </ul>
+
+            <div class="mt-3 text-end">
+                <strong>총 금액: </strong>
+                <span class="fs-5 fw-bold text-success"
+                      th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT')} + '원'">
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:if="${startPage > 1}">
+                <a class="page-link"
+                   th:href="@{/orders(pageNumber=${startPage - 1}, pageSize=${page.size})}"
+                   aria-label="Previous Block">
+                    <span aria-hidden="true">이전</span>
+                </a>
+            </li>
+
+            <li class="page-item"
+                th:each="i : ${pageNumbers}"
+                th:classappend="${i == (page.number + 1)} ? ' active'">
+                <a class="page-link"
+                   th:href="@{/orders(pageNumber=${i}, pageSize=${page.size})}"
+                   th:text="${i}"></a>
+            </li>
+
+            <li class="page-item" th:if="${endPage < page.totalPages}">
+                <a class="page-link"
+                   th:href="@{/orders(pageNumber=${endPage + 1}, pageSize=${page.size})}"
+                   aria-label="Next Block">
+                    <span aria-hidden="true">다음</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
+</body>
+</html>

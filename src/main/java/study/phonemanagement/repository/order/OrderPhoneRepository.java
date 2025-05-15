@@ -1,4 +1,4 @@
-package study.phonemanagement.repository;
+package study.phonemanagement.repository.order;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import study.phonemanagement.entity.order.OrderPhone;
