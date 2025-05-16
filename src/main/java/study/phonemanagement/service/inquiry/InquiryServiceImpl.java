@@ -4,9 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import study.phonemanagement.controller.inquiry.request.CreateInquiryRequest;
+import study.phonemanagement.controller.inquiry.request.ReplyInquiryRequest;
 import study.phonemanagement.entity.inquiry.Inquiry;
+import study.phonemanagement.entity.inquiry.InquiryStatus;
 import study.phonemanagement.entity.phone.Phone;
 import study.phonemanagement.entity.user.User;
+import study.phonemanagement.exception.Inquiry.InquiryNotFoundException;
 import study.phonemanagement.exception.phone.PhoneNotFoundException;
 import study.phonemanagement.exception.user.UserNotFoundException;
 import study.phonemanagement.mapper.inquiry.InquiryMapper;
@@ -51,5 +54,19 @@ public class InquiryServiceImpl implements InquiryService {
         return inquiryRepository.findWithPhoneByUser(user).stream()
                 .map(inquiryMapper::toDetailInquiryResponse)
                 .toList();
+    }
+
+    @Override
+    public List<DetailInquiryResponse> getInquiryList() {
+        return inquiryRepository.findWithPhoneByInquiryStatus(InquiryStatus.BEFORE_REPLY).stream()
+                .map(inquiryMapper::toDetailInquiryResponse)
+                .toList();
+    }
+
+    @Override
+    public void replyInquiry(Long inquiryId, ReplyInquiryRequest replyInquiryRequest) {
+        Inquiry inquiry = inquiryRepository.findById(inquiryId).orElseThrow(() -> new InquiryNotFoundException(INQUIRY_NOT_FOUND));
+
+        inquiry.reply(replyInquiryRequest.getReply());
     }
 }

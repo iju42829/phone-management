@@ -7,6 +7,8 @@ import study.phonemanagement.entity.phone.Phone;
 import study.phonemanagement.entity.user.User;
 import study.phonemanagement.service.inquiry.response.DetailInquiryResponse;
 
+import static study.phonemanagement.entity.inquiry.InquiryStatus.BEFORE_REPLY;
+
 @Component
 public class InquiryMapperImpl implements InquiryMapper{
 
@@ -20,6 +22,7 @@ public class InquiryMapperImpl implements InquiryMapper{
                 .phone(phone)
                 .user(user)
                 .content(createInquiryRequest.getContent())
+                .inquiryStatus(BEFORE_REPLY)
                 .build();
     }
 

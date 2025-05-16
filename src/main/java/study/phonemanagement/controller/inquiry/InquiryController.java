@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import study.phonemanagement.controller.inquiry.request.CreateInquiryRequest;
 import study.phonemanagement.service.inquiry.InquiryService;
 import study.phonemanagement.service.inquiry.response.DetailInquiryResponse;
-import study.phonemanagement.service.phone.PhoneService;
 import study.phonemanagement.service.user.CustomUserDetails;
 
 import java.util.List;
@@ -23,7 +22,6 @@ import java.util.List;
 public class InquiryController {
 
     private final InquiryService inquiryService;
-    private final PhoneService phoneService;
 
     @GetMapping
     public String inquiryUserPage(@AuthenticationPrincipal CustomUserDetails customUserDetails, Model model) {

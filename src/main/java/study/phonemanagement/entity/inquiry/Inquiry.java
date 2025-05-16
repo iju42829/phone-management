@@ -29,10 +29,20 @@ public class Inquiry extends BaseEntity {
 
     private String reply;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private InquiryStatus inquiryStatus;
+
     @Builder
-    private Inquiry(Phone phone, User user, String content) {
+    private Inquiry(Phone phone, User user, String content, InquiryStatus inquiryStatus) {
         this.phone = phone;
         this.user = user;
         this.content = content;
+        this.inquiryStatus = inquiryStatus;
+    }
+
+    public void reply(String reply) {
+        this.reply = reply;
+        this.inquiryStatus = InquiryStatus.REPLIED;
     }
 }
