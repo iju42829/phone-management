@@ -10,7 +10,7 @@
 <div class="container py-4">
     <div class="row justify-content-center mb-4">
         <div class="col-md-6">
-            <form th:action="@{/orders}" method="get" class="input-group">
+            <form th:action="@{/admin/orders}" method="get" class="input-group">
                 <input type="text" class="form-control" name="username" placeholder="사용자명 검색"
                        th:value="${param.username}">
                 <button class="btn btn-outline-primary" type="submit">검색</button>
@@ -29,8 +29,15 @@
                     <small class="text-muted" th:text="${order.orderedAt}"></small>
                 </div>
                 <div class="d-flex gap-2">
-                    <span class="badge bg-primary fs-6" th:text="${order.orderStatus}"></span>
                     <span class="badge fs-6"
+                          th:classappend="
+                                ${order.orderStatus} == 'ORDER' ? 'bg-primary' :
+                                (${order.orderStatus} == 'CANCEL' ? 'bg-secondary' : '')"
+                          th:text="${order.orderStatus}">
+                    </span>
+
+                    <span class="badge fs-6"
+                          th:if="${order.orderStatus != 'CANCEL'}"
                           th:classappend="
                                 ${order.deliveryStatus} == 'READY' ? 'bg-secondary' :
                                 (${order.deliveryStatus} == 'DELIVERED' ? 'bg-warning text-dark' :
@@ -39,7 +46,6 @@
                                 ${order.deliveryStatus} == 'READY' ? '준비' :
                                 (${order.deliveryStatus} == 'DELIVERED' ? '배달' :
                                 (${order.deliveryStatus} == 'COMP' ? '완료' : ''))">
-                        준비
                     </span>
                 </div>
             </div>
@@ -66,6 +72,24 @@
                 <span class="fs-5 fw-bold text-success"
                       th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT')} + '원'">
                 </span>
+            </div>
+
+            <div class="mt-3 text-end">
+                <form th:action="@{/admin/deliveries}" th:method="patch"
+                      th:if="${order.deliveryStatus == 'READY' and order.orderStatus != 'CANCEL'}">
+                    <input type="hidden" name="_method" value="patch"/>
+                    <input type="hidden" name="orderId" th:value="${order.orderId}"/>
+                    <input type="hidden" name="deliveryStatus" value="DELIVERED"/>
+                    <button type="submit" class="btn btn-outline-primary btn-sm">배달 시작</button>
+                </form>
+
+                <form th:action="@{/admin/deliveries}" th:method="patch"
+                      th:if="${order.deliveryStatus == 'DELIVERED' and order.orderStatus != 'CANCEL'}">
+                    <input type="hidden" name="_method" value="patch"/>
+                    <input type="hidden" name="orderId" th:value="${order.orderId}"/>
+                    <input type="hidden" name="deliveryStatus" value="COMP"/>
+                    <button type="submit" class="btn btn-outline-success btn-sm">배달 완료</button>
+                </form>
             </div>
         </div>
     </div>

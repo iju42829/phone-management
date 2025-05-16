@@ -3,12 +3,15 @@ package study.phonemanagement.controller.order;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import study.phonemanagement.controller.order.request.CancelOrderRequest;
 import study.phonemanagement.controller.order.request.CreateOrderDeliveryRequest;
 import study.phonemanagement.controller.order.request.CreateOrderPhoneRequest;
 import study.phonemanagement.controller.order.request.CreateOrderRequest;
+import study.phonemanagement.entity.user.Role;
 import study.phonemanagement.service.order.OrderService;
 import study.phonemanagement.service.order.response.OrderListResponse;
 import study.phonemanagement.service.phone.PhoneService;
@@ -86,5 +89,16 @@ public class OrderController {
         model.addAttribute("endPage",     endPage);
 
         return "order/list";
+    }
+
+    @PatchMapping
+    public String cancelOrder(@ModelAttribute CancelOrderRequest orderRequest, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        orderService.cancelOrder(orderRequest, customUserDetails);
+
+        if (customUserDetails.getAuthorities().contains(new SimpleGrantedAuthority(Role.ADMIN.getKey()))) {
+            return "redirect:/admin/orders";
+        }
+
+        return "redirect:/orders";
     }
 }
