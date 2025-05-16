@@ -13,13 +13,17 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import study.phonemanagement.controller.cart.request.CreateCartOrderPhoneRequest;
 import study.phonemanagement.controller.cart.request.CreateCartOrderRequest;
+import study.phonemanagement.controller.order.request.CancelOrderRequest;
 import study.phonemanagement.controller.order.request.CreateOrderPhoneRequest;
 import study.phonemanagement.controller.order.request.CreateOrderRequest;
 import study.phonemanagement.entity.order.Delivery;
 import study.phonemanagement.entity.order.Order;
 import study.phonemanagement.entity.order.OrderPhone;
+import study.phonemanagement.entity.order.OrderStatus;
 import study.phonemanagement.entity.phone.Phone;
 import study.phonemanagement.entity.user.User;
+import study.phonemanagement.exception.order.OrderCancelForbiddenException;
+import study.phonemanagement.exception.order.OrderNotFoundException;
 import study.phonemanagement.exception.order.OrderOptimisticLockingException;
 import study.phonemanagement.exception.phone.PhoneNotFoundException;
 import study.phonemanagement.exception.user.UserNotFoundException;
@@ -35,6 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static study.phonemanagement.common.ErrorCode.*;
+import static study.phonemanagement.entity.user.Role.*;
 
 @Service
 @Transactional
@@ -188,5 +193,21 @@ public class OrderServiceImpl implements OrderService {
                     .orderPhoneDetailResponseList(phoneDetailResponses)
                     .build();
         });
+    }
+
+    @Override
+    public void cancelOrder(CancelOrderRequest cancelOrderRequest, CustomUserDetails customUserDetails) {
+        User user = userRepository.findByUsername(customUserDetails.getUsername()).orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
+
+        Order order = orderRepository.findById(cancelOrderRequest.getOrderId()).orElseThrow(() -> new OrderNotFoundException(ORDER_NOT_FOUND));
+
+        boolean isAdmin = user.getRole().equals(ADMIN);
+        boolean isOrderOwner = order.getUser().getUsername().equals(user.getUsername());
+
+        if (!isOrderOwner && !isAdmin) {
+            throw new OrderCancelForbiddenException(ORDER_CANCEL_FORBIDDEN);
+        }
+
+        order.changeStatus(OrderStatus.CANCEL);
     }
 }

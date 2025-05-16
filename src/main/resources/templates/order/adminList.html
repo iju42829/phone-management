@@ -29,8 +29,15 @@
                     <small class="text-muted" th:text="${order.orderedAt}"></small>
                 </div>
                 <div class="d-flex gap-2">
-                    <span class="badge bg-primary fs-6" th:text="${order.orderStatus}"></span>
                     <span class="badge fs-6"
+                          th:classappend="
+                                ${order.orderStatus} == 'ORDER' ? 'bg-primary' :
+                                (${order.orderStatus} == 'CANCEL' ? 'bg-secondary' : '')"
+                          th:text="${order.orderStatus}">
+                    </span>
+
+                    <span class="badge fs-6"
+                          th:if="${order.orderStatus != 'CANCEL'}"
                           th:classappend="
                                 ${order.deliveryStatus} == 'READY' ? 'bg-secondary' :
                                 (${order.deliveryStatus} == 'DELIVERED' ? 'bg-warning text-dark' :
@@ -39,7 +46,6 @@
                                 ${order.deliveryStatus} == 'READY' ? '준비' :
                                 (${order.deliveryStatus} == 'DELIVERED' ? '배달' :
                                 (${order.deliveryStatus} == 'COMP' ? '완료' : ''))">
-                        준비
                     </span>
                 </div>
             </div>
@@ -69,14 +75,16 @@
             </div>
 
             <div class="mt-3 text-end">
-                <form th:action="@{/admin/deliveries}" th:method="patch" th:if="${order.deliveryStatus == 'READY'}">
+                <form th:action="@{/admin/deliveries}" th:method="patch"
+                      th:if="${order.deliveryStatus == 'READY' and order.orderStatus != 'CANCEL'}">
                     <input type="hidden" name="_method" value="patch"/>
                     <input type="hidden" name="orderId" th:value="${order.orderId}"/>
                     <input type="hidden" name="deliveryStatus" value="DELIVERED"/>
                     <button type="submit" class="btn btn-outline-primary btn-sm">배달 시작</button>
                 </form>
 
-                <form th:action="@{/admin/deliveries}" th:method="patch" th:if="${order.deliveryStatus == 'DELIVERED'}">
+                <form th:action="@{/admin/deliveries}" th:method="patch"
+                      th:if="${order.deliveryStatus == 'DELIVERED' and order.orderStatus != 'CANCEL'}">
                     <input type="hidden" name="_method" value="patch"/>
                     <input type="hidden" name="orderId" th:value="${order.orderId}"/>
                     <input type="hidden" name="deliveryStatus" value="COMP"/>
