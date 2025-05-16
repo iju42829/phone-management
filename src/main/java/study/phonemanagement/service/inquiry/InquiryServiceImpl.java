@@ -13,7 +13,10 @@ import study.phonemanagement.mapper.inquiry.InquiryMapper;
 import study.phonemanagement.repository.UserRepository;
 import study.phonemanagement.repository.inquiry.InquiryRepository;
 import study.phonemanagement.repository.phone.PhoneRepository;
+import study.phonemanagement.service.inquiry.response.DetailInquiryResponse;
 import study.phonemanagement.service.user.CustomUserDetails;
+
+import java.util.List;
 
 import static study.phonemanagement.common.ErrorCode.*;
 
@@ -38,5 +41,15 @@ public class InquiryServiceImpl implements InquiryService {
         inquiryRepository.save(inquiry);
 
         return inquiry.getId();
+    }
+
+    @Override
+    public List<DetailInquiryResponse> getInquiryList(CustomUserDetails customUserDetails) {
+        User user = userRepository.findByUsername(customUserDetails.getUsername())
+                .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
+
+        return inquiryRepository.findWithPhoneByUser(user).stream()
+                .map(inquiryMapper::toDetailInquiryResponse)
+                .toList();
     }
 }

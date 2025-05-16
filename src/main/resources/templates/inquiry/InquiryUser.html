@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/base :: common_header(~{::title})}">
+  <meta charset="UTF-8">
+  <title>문의 내역</title>
+</head>
+<body>
+<div th:replace="~{layout/navbar :: navbar}"></div>
+
+<div class="container py-5">
+  <h2 class="mb-4 text-center">문의 내역</h2>
+
+  <div class="row">
+    <div class="col-12 mb-4" th:each="inquiry : ${inquiries}">
+      <div class="card shadow-sm w-100">
+        <div class="card-header bg-primary text-white">
+          휴대폰: <span th:text="${inquiry.phoneName}">폰 이름</span>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <h5 class="card-title">문의 내용</h5>
+            <p class="card-text" th:text="${inquiry.content}"></p>
+          </div>
+
+          <div class="mb-3">
+            <h5 class="card-title">답변</h5>
+            <p class="card-text">
+              <span th:if="${inquiry.reply != null}" th:text="${inquiry.reply}"></span>
+              <span th:if="${inquiry.reply == null}" class="text-muted fst-italic">
+                  아직 답변이 없습니다.
+                </span>
+            </p>
+          </div>
+        </div>
+        <div class="card-footer text-end">
+          <small class="text-muted me-3">
+            작성일시: <span th:text="${inquiry.createdDate}"></span>
+          </small>
+          <small class="text-muted">
+            수정일시: <span th:text="${inquiry.lastModifiedDate}"></span>
+          </small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

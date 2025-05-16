@@ -10,8 +10,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import study.phonemanagement.controller.inquiry.request.CreateInquiryRequest;
 import study.phonemanagement.service.inquiry.InquiryService;
+import study.phonemanagement.service.inquiry.response.DetailInquiryResponse;
 import study.phonemanagement.service.phone.PhoneService;
 import study.phonemanagement.service.user.CustomUserDetails;
+
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -21,6 +24,15 @@ public class InquiryController {
 
     private final InquiryService inquiryService;
     private final PhoneService phoneService;
+
+    @GetMapping
+    public String inquiryUserPage(@AuthenticationPrincipal CustomUserDetails customUserDetails, Model model) {
+        List<DetailInquiryResponse> inquiryList = inquiryService.getInquiryList(customUserDetails);
+
+        model.addAttribute("inquiries", inquiryList);
+
+        return "inquiry/InquiryUser";
+    }
 
     @GetMapping("/{phoneId}")
     public String createInquiryPage(@PathVariable Long phoneId, Model model) {
