@@ -16,13 +16,11 @@ import study.phonemanagement.controller.cart.request.CreateCartOrderRequest;
 import study.phonemanagement.controller.order.request.CancelOrderRequest;
 import study.phonemanagement.controller.order.request.CreateOrderPhoneRequest;
 import study.phonemanagement.controller.order.request.CreateOrderRequest;
-import study.phonemanagement.entity.order.Delivery;
-import study.phonemanagement.entity.order.Order;
-import study.phonemanagement.entity.order.OrderPhone;
-import study.phonemanagement.entity.order.OrderStatus;
+import study.phonemanagement.entity.order.*;
 import study.phonemanagement.entity.phone.Phone;
 import study.phonemanagement.entity.user.User;
 import study.phonemanagement.exception.order.OrderCancelForbiddenException;
+import study.phonemanagement.exception.order.OrderCannotBeCancelledException;
 import study.phonemanagement.exception.order.OrderNotFoundException;
 import study.phonemanagement.exception.order.OrderOptimisticLockingException;
 import study.phonemanagement.exception.phone.PhoneNotFoundException;
@@ -199,7 +197,11 @@ public class OrderServiceImpl implements OrderService {
     public void cancelOrder(CancelOrderRequest cancelOrderRequest, CustomUserDetails customUserDetails) {
         User user = userRepository.findByUsername(customUserDetails.getUsername()).orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
 
-        Order order = orderRepository.findById(cancelOrderRequest.getOrderId()).orElseThrow(() -> new OrderNotFoundException(ORDER_NOT_FOUND));
+        Order order = orderRepository.findWithDeliveryById(cancelOrderRequest.getOrderId()).orElseThrow(() -> new OrderNotFoundException(ORDER_NOT_FOUND));
+
+        if (!order.getDelivery().getStatus().equals(DeliveryStatus.READY)) {
+            throw new OrderCannotBeCancelledException(ORDER_CANNOT_BE_CANCELLED);
+        }
 
         boolean isAdmin = user.getRole().equals(ADMIN);
         boolean isOrderOwner = order.getUser().getUsername().equals(user.getUsername());

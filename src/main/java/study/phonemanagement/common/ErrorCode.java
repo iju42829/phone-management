@@ -22,6 +22,7 @@ public enum ErrorCode {
     ORDER_NOT_FOUND(HttpStatus.NOT_FOUND, "주문을 찾을 수 없습니다.", "/"),
     ORDER_CONCURRENCY_FAILURE(HttpStatus.CONFLICT, "동시성 충돌로 주문 처리에 실패했습니다.", "/orders"),
     ORDER_CANCEL_FORBIDDEN(HttpStatus.FORBIDDEN, "주문을 취소할 권한이 없습니다.", "/"),
+    ORDER_CANNOT_BE_CANCELLED(HttpStatus.BAD_REQUEST, "이 주문은 취소할 수 없습니다.", "/"),
 
 
     // ORDER_PHONE
