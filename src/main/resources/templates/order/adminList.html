@@ -67,6 +67,22 @@
                       th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT')} + '원'">
                 </span>
             </div>
+
+            <div class="mt-3 text-end">
+                <form th:action="@{/admin/deliveries}" th:method="patch" th:if="${order.deliveryStatus == 'READY'}">
+                    <input type="hidden" name="_method" value="patch"/>
+                    <input type="hidden" name="orderId" th:value="${order.orderId}"/>
+                    <input type="hidden" name="deliveryStatus" value="DELIVERED"/>
+                    <button type="submit" class="btn btn-outline-primary btn-sm">배달 시작</button>
+                </form>
+
+                <form th:action="@{/admin/deliveries}" th:method="patch" th:if="${order.deliveryStatus == 'DELIVERED'}">
+                    <input type="hidden" name="_method" value="patch"/>
+                    <input type="hidden" name="orderId" th:value="${order.orderId}"/>
+                    <input type="hidden" name="deliveryStatus" value="COMP"/>
+                    <button type="submit" class="btn btn-outline-success btn-sm">배달 완료</button>
+                </form>
+            </div>
         </div>
     </div>
 
