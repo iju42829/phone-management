@@ -42,12 +42,7 @@ public class PhoneServiceImpl implements PhoneService {
         Page<ListPhoneResponse> page = phoneRepository.findAllPhone(searchWord, manufacturer, pageable)
                 .map(phoneMapper::toPhoneListResponse);
 
-        return CachedListPhoneResponse.builder()
-                .content(page.getContent())
-                .pageNumber(page.getNumber() + 1)
-                .pageSize(page.getSize())
-                .totalElements(page.getTotalElements())
-                .build();
+        return phoneMapper.toCachedListPhoneResponse(page) ;
     }
 
     @Override
