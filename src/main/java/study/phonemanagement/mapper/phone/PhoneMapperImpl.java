@@ -1,8 +1,10 @@
 package study.phonemanagement.mapper.phone;
 
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 import study.phonemanagement.controller.phone.request.CreatePhoneRequest;
 import study.phonemanagement.entity.phone.Phone;
+import study.phonemanagement.service.phone.response.CachedListPhoneResponse;
 import study.phonemanagement.service.phone.response.DetailPhoneResponse;
 import study.phonemanagement.service.phone.response.ListPhoneResponse;
 import study.phonemanagement.service.phone.response.UpdatePhoneResponse;
@@ -82,6 +84,20 @@ public class PhoneMapperImpl implements PhoneMapper {
                 .price(createPhoneRequest.getPrice())
                 .quantity(createPhoneRequest.getQuantity())
                 .color(createPhoneRequest.getColor())
+                .build();
+    }
+
+    @Override
+    public CachedListPhoneResponse toCachedListPhoneResponse(Page<ListPhoneResponse> page) {
+        if (page == null) {
+            return null;
+        }
+
+        return CachedListPhoneResponse.builder()
+                .content(page.getContent())
+                .pageNumber(page.getNumber() + 1)
+                .pageSize(page.getSize())
+                .totalElements(page.getTotalElements())
                 .build();
     }
 }
