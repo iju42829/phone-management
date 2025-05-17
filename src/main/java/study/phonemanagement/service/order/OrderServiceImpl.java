@@ -25,6 +25,7 @@ import study.phonemanagement.exception.order.OrderNotFoundException;
 import study.phonemanagement.exception.order.OrderOptimisticLockingException;
 import study.phonemanagement.exception.phone.PhoneNotFoundException;
 import study.phonemanagement.exception.user.UserNotFoundException;
+import study.phonemanagement.mapper.order.OrderMapper;
 import study.phonemanagement.mapper.order.OrderPhoneMapper;
 import study.phonemanagement.repository.order.OrderRepository;
 import study.phonemanagement.repository.UserRepository;
@@ -49,6 +50,7 @@ public class OrderServiceImpl implements OrderService {
     private final UserRepository userRepository;
 
     private final OrderPhoneMapper orderPhoneMapper;
+    private final OrderMapper orderMapper;
 
     @Retryable(
             retryFor = ObjectOptimisticLockingFailureException.class,
@@ -156,14 +158,7 @@ public class OrderServiceImpl implements OrderService {
                     .map(orderPhoneMapper::toOrderPhoneDetailResponse)
                     .toList();
 
-            return OrderListResponse.builder()
-                    .orderId(order.getId())
-                    .orderedAt(order.getCreatedDate())
-                    .orderStatus(order.getStatus().name())
-                    .deliveryStatus(order.getDelivery().getStatus().name())
-                    .totalAmount(order.getTotalPrice())
-                    .orderPhoneDetailResponseList(phoneDetailResponses)
-                    .build();
+            return orderMapper.toOrderListResponse(order, phoneDetailResponses);
         });
     }
 
@@ -182,14 +177,7 @@ public class OrderServiceImpl implements OrderService {
                     .map(orderPhoneMapper::toOrderPhoneDetailResponse)
                     .toList();
 
-            return OrderListResponse.builder()
-                    .orderId(order.getId())
-                    .orderedAt(order.getCreatedDate())
-                    .orderStatus(order.getStatus().name())
-                    .deliveryStatus(order.getDelivery().getStatus().name())
-                    .totalAmount(order.getTotalPrice())
-                    .orderPhoneDetailResponseList(phoneDetailResponses)
-                    .build();
+            return orderMapper.toOrderListResponse(order, phoneDetailResponses);
         });
     }
 
