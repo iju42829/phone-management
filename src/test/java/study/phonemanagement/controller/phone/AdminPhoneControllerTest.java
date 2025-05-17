@@ -9,6 +9,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import study.phonemanagement.ControllerTestSupport;
 import study.phonemanagement.controller.phone.request.CreatePhoneRequest;
 import study.phonemanagement.controller.phone.request.UpdatePhoneRequest;
+import study.phonemanagement.entity.phone.Manufacturer;
+import study.phonemanagement.service.phone.response.CachedListPhoneResponse;
 import study.phonemanagement.service.phone.response.ListPhoneResponse;
 import study.phonemanagement.service.phone.response.UpdatePhoneResponse;
 
@@ -33,21 +35,25 @@ class AdminPhoneControllerTest extends ControllerTestSupport {
     void phoneMainPage() throws Exception {
         // given
         List<ListPhoneResponse> content = List.of(
-                new ListPhoneResponse(1L, "Galaxy", SAMSUNG, STORAGE_128,
-                        AVAILABLE, 10000, 5, "Black", LocalDateTime.now())
+                new ListPhoneResponse(1L, "Galaxy", Manufacturer.SAMSUNG, STORAGE_128, AVAILABLE, 10000, 5, "Black", LocalDateTime.now())
         );
-        Page<ListPhoneResponse> page = new PageImpl<>(content, PageRequest.of(0, 20), content.size());
+        CachedListPhoneResponse cachedPage = new CachedListPhoneResponse(content, 1, 20, (long) content.size());
+
+        Page<ListPhoneResponse> expectedPage = new PageImpl<>(
+                cachedPage.getContent(),
+                PageRequest.of(cachedPage.getPageNumber() - 1, cachedPage.getPageSize()),
+                cachedPage.getTotalElements()
+        );
 
         // stubbing
-        when(phoneService.getAllPhones(any(), any(), any(Integer.class), any(Integer.class)))
-                .thenReturn(page);
+        when(phoneService.getAllPhones(any(), any(), any(Integer.class), any(Integer.class))).thenReturn(cachedPage);
 
         // when - then
         mockMvc.perform(get("/admin/phones"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("phones/adminPhone"))
                 .andExpect(model().attributeExists("phones"))
-                .andExpect(model().attribute("page", page))
+                .andExpect(model().attribute("page", expectedPage))
                 .andExpect(model().attributeExists("pageNumbers"))
                 .andExpect(model().attribute("startPage", 1))
                 .andExpect(model().attribute("endPage", 1));
