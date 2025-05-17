@@ -64,7 +64,7 @@
                 <a th:href="@{/orders/{phoneId}(phoneId=${phone.id})}" class="btn btn-sm btn-success w-100" th:attr="disabled=${phone.status != '판매중'}">주문</a>
             </td>
             <td class="p-1">
-                <a th:href="@{/}" class="btn btn-sm btn-outline-secondary w-100">문의</a>
+                <a th:href="@{/inquiries/{phoneId}(phoneId=${phone.id})}" class="btn btn-sm btn-outline-secondary w-100">문의</a>
             </td>
         </tr>
         </tbody>

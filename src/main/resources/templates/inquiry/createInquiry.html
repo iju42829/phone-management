@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/base :: common_header(~{::title})}">
+  <meta charset="UTF-8">
+  <title>문의 하기</title>
+</head>
+<body>
+  <div th:replace="~{layout/navbar :: navbar}"></div>
+
+  <div class="container py-5">
+
+    <h2 class="mb-4">문의 작성</h2>
+
+    <form th:action="@{/inquiries/{phoneId}(phoneId=${phoneId})}" th:object="${createInquiryRequest}" method="post" class="needs-validation">
+      <div class="mb-3">
+        <label for="content" class="form-label">문의 내용</label>
+        <textarea id="content" class="form-control" th:field="*{content}" rows="6" placeholder="문의하실 내용을 작성해주세요"></textarea>
+        <div class="text-danger small" th:errors="*{content}"></div>
+      </div>
+
+      <div class="mt-4">
+        <button type="submit" class="btn btn-primary">문의 등록</button>
+        <a th:href="@{/phones}" class="btn btn-secondary">취소</a>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

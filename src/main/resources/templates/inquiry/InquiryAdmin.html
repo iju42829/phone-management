@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/base :: common_header(~{::title})}">
+    <meta charset="UTF-8">
+    <title>관리자 문의 관리</title>
+</head>
+<body>
+<div th:replace="~{layout/navbar :: navbar}"></div>
+
+<div class="container py-5">
+    <h2 class="mb-4 text-center">문의 관리 (Admin)</h2>
+
+    <div class="row">
+        <div class="col-12 mb-4" th:each="inquiry : ${inquiries}">
+            <div class="card shadow-sm w-100">
+                <div class="card-header bg-dark text-white">
+                    <strong>문의 ID:</strong> <span th:text="${inquiry.id}"></span>
+                    &nbsp;|&nbsp;
+                    <strong>휴대폰:</strong> <span th:text="${inquiry.phoneName}"></span>
+                </div>
+
+                <div class="card-body">
+                    <div class="mb-3">
+                        <h5 class="card-title">문의 내용</h5>
+                        <p class="card-text" th:text="${inquiry.content}"></p>
+                    </div>
+
+                    <div class="mb-3">
+                        <h5 class="card-title">답변</h5>
+                        <form th:action="@{/admin/inquiries/{id}(id=${inquiry.id})}" th:object="${replyInquiryRequest}" method="post">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+                            <textarea th:field="*{reply}" class="form-control" rows="4" placeholder="답변을 작성하세요..."></textarea>
+                            <div class="text-danger small" th:errors="*{reply}"></div>
+
+                            <button type="submit" class="btn btn-success mt-2">
+                                답변 저장
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card-footer text-end">
+                    <small class="text-muted me-4">
+                        작성일시: <span th:text="${inquiry.createdDate}"></span>
+                    </small>
+                    <small class="text-muted">
+                        수정일시: <span th:text="${inquiry.lastModifiedDate}"></span>
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -26,8 +26,10 @@ public enum ErrorCode {
 
 
     // ORDER_PHONE
-    ORDER_PHONE_NOT_FOUND(HttpStatus.NOT_FOUND, "주문한 휴대폰을 찾을 수 없습니다.", "/");
+    ORDER_PHONE_NOT_FOUND(HttpStatus.NOT_FOUND, "주문한 휴대폰을 찾을 수 없습니다.", "/"),
 
+    // INQUIRY
+    INQUIRY_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 문의를 찾을 수 없습니다.", "/admin/inquiries");
 
     private final HttpStatus httpStatus;
     private final String message;
