@@ -4,8 +4,11 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLRestriction;
 import study.phonemanagement.entity.BaseEntity;
+import study.phonemanagement.exception.phone.PhoneStockShortageException;
 
 import java.time.LocalDateTime;
+
+import static study.phonemanagement.common.ErrorCode.*;
 
 @Entity
 @Getter @Setter
@@ -72,7 +75,17 @@ public class Phone extends BaseEntity {
     }
 
     public void reduceQuantity(Integer quantity) {
-        this.quantity -= quantity;
+        int updatedQuantity = this.quantity - quantity;
+
+        if (updatedQuantity < 0) {
+            throw new PhoneStockShortageException(PHONE_STOCK_SHORTAGE);
+        }
+
+        this.quantity = updatedQuantity;
+
+        if (updatedQuantity == 0) {
+            this.status = Status.OUT_OF_STOCK;
+        }
     }
 
     public void addQuantity(Integer quantity) {

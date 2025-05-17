@@ -16,7 +16,7 @@ public enum ErrorCode {
 
     // PHONE
     PHONE_NOT_FOUND(HttpStatus.NOT_FOUND,"휴대폰을 찾을 수 없습니다.", "/phones"),
-
+    PHONE_STOCK_SHORTAGE(HttpStatus.BAD_REQUEST, "휴대폰 재고가 부족합니다.", "/phones"),
 
     // ORDER
     ORDER_NOT_FOUND(HttpStatus.NOT_FOUND, "주문을 찾을 수 없습니다.", "/"),

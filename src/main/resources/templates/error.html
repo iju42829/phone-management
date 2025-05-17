@@ -1,13 +1,18 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8" />
+<head th:replace="~{layout/base :: common_header(~{::title})}">
+    <meta charset="UTF-8">
     <title>오류 발생</title>
 </head>
-<body>
-<h1 th:text="${message}">Error Message</h1>
-<p>
-    <a th:href="${redirectUrl}">돌아가기</a>
-</p>
+<body class="bg-light d-flex justify-content-center align-items-center vh-100">
+<div class="container text-center">
+    <div class="card shadow p-4" style="max-width: 500px; margin: auto;">
+        <div class="card-body">
+            <h2 class="card-title text-danger mb-3">오류가 발생했습니다</h2>
+            <p class="card-text fs-5" th:text="${message}">Error message</p>
+            <a th:href="${redirectUrl}" class="btn btn-primary mt-3">돌아가기</a>
+        </div>
+    </div>
+</div>
 </body>
 </html>
