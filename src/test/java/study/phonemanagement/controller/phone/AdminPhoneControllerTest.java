@@ -56,11 +56,47 @@ class AdminPhoneControllerTest extends ControllerTestSupport {
                 .andExpect(model().attribute("page", expectedPage))
                 .andExpect(model().attributeExists("pageNumbers"))
                 .andExpect(model().attribute("startPage", 1))
-                .andExpect(model().attribute("endPage", 1));
+                .andExpect(model().attribute("endPage", 1))
+                .andExpect(model().attribute("manufacturer", ""));
 
         verify(phoneService, times(1))
                 .getAllPhones(any(), any(), any(Integer.class), any(Integer.class));
     }
+
+    @DisplayName("manufacturer를 requestParam으로 받으면 모델에 해당 데이터를 함께 반환한다")
+    @Test
+    @WithMockUser(username="admin", roles={"ADMIN"})
+    void phoneMainPageWithManufacturer() throws Exception {
+        // given
+        List<ListPhoneResponse> content = List.of(
+                new ListPhoneResponse(1L, "Galaxy", Manufacturer.SAMSUNG, STORAGE_128, AVAILABLE, 10000, 5, "Black", LocalDateTime.now())
+        );
+        CachedListPhoneResponse cachedPage = new CachedListPhoneResponse(content, 1, 20, (long) content.size());
+
+        Page<ListPhoneResponse> expectedPage = new PageImpl<>(
+                cachedPage.getContent(),
+                PageRequest.of(cachedPage.getPageNumber() - 1, cachedPage.getPageSize()),
+                cachedPage.getTotalElements()
+        );
+
+        // stubbing
+        when(phoneService.getAllPhones(any(), any(), any(Integer.class), any(Integer.class))).thenReturn(cachedPage);
+
+        // when - then
+        mockMvc.perform(get("/admin/phones").param("manufacturer", SAMSUNG.name()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("phones/adminPhone"))
+                .andExpect(model().attributeExists("phones"))
+                .andExpect(model().attribute("page", expectedPage))
+                .andExpect(model().attributeExists("pageNumbers"))
+                .andExpect(model().attribute("startPage", 1))
+                .andExpect(model().attribute("endPage", 1))
+                .andExpect(model().attribute("manufacturer", SAMSUNG.name()));
+
+        verify(phoneService, times(1))
+                .getAllPhones(any(), any(), any(Integer.class), any(Integer.class));
+    }
+
 
     @DisplayName("휴대폰 등록 페이지에 접근하면 adminPhoneCreate 뷰를 반환한다.")
     @Test
