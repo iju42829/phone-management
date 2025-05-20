@@ -5,7 +5,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
 import study.phonemanagement.IntegrationTestSupport;
 import study.phonemanagement.controller.phone.request.CreatePhoneRequest;
@@ -16,6 +15,7 @@ import study.phonemanagement.entity.phone.Status;
 import study.phonemanagement.entity.phone.Storage;
 import study.phonemanagement.exception.phone.PhoneNotFoundException;
 import study.phonemanagement.repository.phone.PhoneRepository;
+import study.phonemanagement.service.phone.response.CachedListPhoneResponse;
 import study.phonemanagement.service.phone.response.DetailPhoneResponse;
 import study.phonemanagement.service.phone.response.ListPhoneResponse;
 import study.phonemanagement.service.phone.response.UpdatePhoneResponse;
@@ -187,10 +187,13 @@ class PhoneServiceTest extends IntegrationTestSupport {
         phoneRepository.saveAll(List.of(phone1, phone2, phone3));
 
         // when
-        Page<ListPhoneResponse> page = phoneService.getAllPhones("testAPPLE", APPLE, 1, 2);
+        CachedListPhoneResponse page = phoneService.getAllPhones("testAPPLE", APPLE, 1, 2);
 
         // then
-        assertThat(page.getNumberOfElements()).isEqualTo(1);
+        assertThat(page.getPageNumber()).isEqualTo(1);
+        assertThat(page.getPageSize()).isEqualTo(2);
+        assertThat(page.getTotalElements()).isEqualTo(1);
+
         assertThat(page.getContent())
                 .extracting(ListPhoneResponse::getName, ListPhoneResponse::getManufacturer, ListPhoneResponse::getStorage,
                         ListPhoneResponse::getStatus, ListPhoneResponse::getPrice, ListPhoneResponse::getQuantity, ListPhoneResponse::getColor)
@@ -210,10 +213,13 @@ class PhoneServiceTest extends IntegrationTestSupport {
         phoneRepository.saveAll(List.of(phone1, phone2, phone3));
 
         // when
-        Page<ListPhoneResponse> page = phoneService.getAllPhones(null, null, 1, 3);
+        CachedListPhoneResponse page = phoneService.getAllPhones(null, null, 1, 3);
 
         // then
-        assertThat(page.getNumberOfElements()).isEqualTo(3);
+        assertThat(page.getPageNumber()).isEqualTo(1);
+        assertThat(page.getPageSize()).isEqualTo(3);
+        assertThat(page.getTotalElements()).isEqualTo(3);
+
         assertThat(page.getContent())
                 .extracting(ListPhoneResponse::getName, ListPhoneResponse::getManufacturer, ListPhoneResponse::getStorage,
                         ListPhoneResponse::getStatus, ListPhoneResponse::getPrice, ListPhoneResponse::getQuantity, ListPhoneResponse::getColor)

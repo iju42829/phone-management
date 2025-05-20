@@ -1,21 +1,27 @@
 package study.phonemanagement.mapper.phone;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import study.phonemanagement.IntegrationTestSupport;
 import study.phonemanagement.controller.phone.request.CreatePhoneRequest;
-import study.phonemanagement.entity.phone.Manufacturer;
 import study.phonemanagement.entity.phone.Phone;
-import study.phonemanagement.entity.phone.Status;
-import study.phonemanagement.entity.phone.Storage;
+import study.phonemanagement.service.phone.response.CachedListPhoneResponse;
 import study.phonemanagement.service.phone.response.DetailPhoneResponse;
 import study.phonemanagement.service.phone.response.ListPhoneResponse;
 import study.phonemanagement.service.phone.response.UpdatePhoneResponse;
 
-import static org.assertj.core.api.Assertions.*;
+import java.time.LocalDateTime;
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.groups.Tuple.tuple;
+import static study.phonemanagement.entity.phone.Manufacturer.SAMSUNG;
+import static study.phonemanagement.entity.phone.Status.AVAILABLE;
+import static study.phonemanagement.entity.phone.Storage.STORAGE_128;
 
 class PhoneMapperTest extends IntegrationTestSupport {
 
@@ -28,9 +34,9 @@ class PhoneMapperTest extends IntegrationTestSupport {
         // given
         CreatePhoneRequest createPhoneRequest = CreatePhoneRequest.builder()
                 .name("testPhone")
-                .manufacturer(Manufacturer.SAMSUNG)
-                .storage(Storage.STORAGE_128)
-                .status(Status.AVAILABLE)
+                .manufacturer(SAMSUNG)
+                .storage(STORAGE_128)
+                .status(AVAILABLE)
                 .price(10000)
                 .quantity(10)
                 .color("testColor")
@@ -67,9 +73,9 @@ class PhoneMapperTest extends IntegrationTestSupport {
         // given
         Phone phone = Phone.builder()
                 .name("testPhone")
-                .manufacturer(Manufacturer.SAMSUNG)
-                .storage(Storage.STORAGE_128)
-                .status(Status.AVAILABLE)
+                .manufacturer(SAMSUNG)
+                .storage(STORAGE_128)
+                .status(AVAILABLE)
                 .price(10000)
                 .quantity(10)
                 .color("testColor")
@@ -108,9 +114,9 @@ class PhoneMapperTest extends IntegrationTestSupport {
         // given
         Phone phone = Phone.builder()
                 .name("testPhone")
-                .manufacturer(Manufacturer.SAMSUNG)
-                .storage(Storage.STORAGE_128)
-                .status(Status.AVAILABLE)
+                .manufacturer(SAMSUNG)
+                .storage(STORAGE_128)
+                .status(AVAILABLE)
                 .price(10000)
                 .quantity(10)
                 .color("testColor")
@@ -125,8 +131,8 @@ class PhoneMapperTest extends IntegrationTestSupport {
                         UpdatePhoneResponse::getName, UpdatePhoneResponse::getManufacturer, UpdatePhoneResponse::getStorage, UpdatePhoneResponse::getStatus,
                         UpdatePhoneResponse::getPrice, UpdatePhoneResponse::getQuantity, UpdatePhoneResponse::getColor)
                 .containsExactly(
-                    phone.getName(), phone.getManufacturer(), phone.getStorage(), phone.getStatus(),
-                    phone.getPrice(), phone.getQuantity(), phone.getColor()
+                        phone.getName(), phone.getManufacturer(), phone.getStorage(), phone.getStatus(),
+                        phone.getPrice(), phone.getQuantity(), phone.getColor()
                 );
     }
 
@@ -146,9 +152,9 @@ class PhoneMapperTest extends IntegrationTestSupport {
         // given
         Phone phone = Phone.builder()
                 .name("testPhone")
-                .manufacturer(Manufacturer.SAMSUNG)
-                .storage(Storage.STORAGE_128)
-                .status(Status.AVAILABLE)
+                .manufacturer(SAMSUNG)
+                .storage(STORAGE_128)
+                .status(AVAILABLE)
                 .price(10000)
                 .quantity(10)
                 .color("testColor")
@@ -182,4 +188,55 @@ class PhoneMapperTest extends IntegrationTestSupport {
         // then
         assertThat(phone).isNull();
     }
+
+    @DisplayName("ListPhoneResponse 페이지 객체를 CachedListPhoneResponse로 변환한다.")
+    @Test
+    void toCachedListPhoneResponse() {
+        // given
+        ListPhoneResponse listPhoneResponse = ListPhoneResponse.builder()
+                .id(1L)
+                .name("testPhone")
+                .manufacturer(SAMSUNG)
+                .storage(STORAGE_128)
+                .status(AVAILABLE)
+                .price(10000)
+                .quantity(10)
+                .color("testColor")
+                .createdDate(LocalDateTime.now())
+                .build();
+
+        Page<ListPhoneResponse> page = new PageImpl<>(
+                List.of(listPhoneResponse),
+                PageRequest.of(0, 1),
+                1);
+
+        // when
+        CachedListPhoneResponse cachedListPhoneResponse = phoneMapper.toCachedListPhoneResponse(page);
+
+        // then
+        assertThat(cachedListPhoneResponse)
+                .extracting(CachedListPhoneResponse::getPageSize, CachedListPhoneResponse::getPageNumber, CachedListPhoneResponse::getTotalElements)
+                .containsExactly(1, 1, 1L);
+
+        assertThat(cachedListPhoneResponse.getContent())
+                .extracting(ListPhoneResponse::getId, ListPhoneResponse::getName, ListPhoneResponse::getManufacturer, ListPhoneResponse::getStorage,
+                        ListPhoneResponse::getStatus, ListPhoneResponse::getPrice, ListPhoneResponse::getQuantity, ListPhoneResponse::getColor)
+                .containsExactly(tuple(
+                        listPhoneResponse.getId(), listPhoneResponse.getName(), listPhoneResponse.getManufacturer(), listPhoneResponse.getStorage(),
+                        listPhoneResponse.getStatus(), listPhoneResponse.getPrice(), listPhoneResponse.getQuantity(), listPhoneResponse.getColor())
+                );
+
+        assertThat(cachedListPhoneResponse.getContent().get(0).getCreatedDate()).isNotNull();
+    }
+
+    @DisplayName("ListPhoneResponse 페이지 객체가 null이면 null을 반환한다.")
+    @Test
+    void toCachedListPhoneResponseWithNull() {
+        // given - when
+        CachedListPhoneResponse cachedListPhoneResponse = phoneMapper.toCachedListPhoneResponse(null);
+
+        // then
+        assertThat(cachedListPhoneResponse).isNull();
+    }
+
 }

@@ -54,8 +54,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Retryable(
             retryFor = ObjectOptimisticLockingFailureException.class,
-            maxAttempts = 10,
-            backoff = @Backoff(delay = 1500)
+            maxAttempts = 15,
+            backoff = @Backoff(delay = 2000)
     )
     @Override
     public Long createOrder(CreateOrderRequest createOrderRequest, CustomUserDetails customUserDetails) {
