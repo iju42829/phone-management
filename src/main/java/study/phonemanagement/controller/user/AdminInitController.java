@@ -6,11 +6,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 import study.phonemanagement.controller.user.request.CreateUserRequest;
+import study.phonemanagement.controller.user.validator.CreateUserRequestValidator;
 import study.phonemanagement.service.user.AdminUserService;
 
 @Slf4j
@@ -20,6 +19,13 @@ import study.phonemanagement.service.user.AdminUserService;
 public class AdminInitController {
 
     private final AdminUserService adminUserService;
+    private final CreateUserRequestValidator creteUserRequestValidator;
+
+    @InitBinder
+    public void init(WebDataBinder dataBinder) {
+        log.info("init binder {}", dataBinder);
+        dataBinder.addValidators(creteUserRequestValidator);
+    }
 
     @GetMapping("/signup")
     public String joinPage(Model model) {
