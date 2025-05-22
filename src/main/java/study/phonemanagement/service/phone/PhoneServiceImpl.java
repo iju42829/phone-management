@@ -10,15 +10,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import study.phonemanagement.controller.phone.request.CreatePhoneRequest;
 import study.phonemanagement.controller.phone.request.UpdatePhoneRequest;
+import study.phonemanagement.entity.cart.Cart;
 import study.phonemanagement.entity.phone.Manufacturer;
 import study.phonemanagement.entity.phone.Phone;
 import study.phonemanagement.exception.phone.PhoneNotFoundException;
 import study.phonemanagement.mapper.phone.PhoneMapper;
+import study.phonemanagement.repository.order.CartRepository;
 import study.phonemanagement.repository.phone.PhoneRepository;
 import study.phonemanagement.service.phone.response.CachedListPhoneResponse;
 import study.phonemanagement.service.phone.response.DetailPhoneResponse;
 import study.phonemanagement.service.phone.response.ListPhoneResponse;
 import study.phonemanagement.service.phone.response.UpdatePhoneResponse;
+
+import java.util.List;
 
 import static study.phonemanagement.common.ErrorCode.*;
 
@@ -28,6 +32,7 @@ import static study.phonemanagement.common.ErrorCode.*;
 public class PhoneServiceImpl implements PhoneService {
 
     private final PhoneRepository phoneRepository;
+    private final CartRepository cartRepository;
     private final PhoneMapper phoneMapper;
 
     @Override
@@ -59,12 +64,15 @@ public class PhoneServiceImpl implements PhoneService {
         Phone phone = phoneRepository.findById(phoneId)
                 .orElseThrow(() -> new PhoneNotFoundException(PHONE_NOT_FOUND));
 
+        List<Cart> cart = cartRepository.findAllByPhone(phone);
+        cartRepository.deleteAll(cart);
+
         phone.delete();
     }
 
     @Override
     public UpdatePhoneResponse getPhoneForUpdate(Long phoneId) {
-        return phoneRepository.findById(phoneId)
+        return phoneRepository.findByIdAndDeletedAtIsNull(phoneId)
                 .map(phoneMapper::toUpdatePhoneResponse)
                 .orElseThrow(() -> new PhoneNotFoundException(PHONE_NOT_FOUND));
     }
@@ -88,7 +96,7 @@ public class PhoneServiceImpl implements PhoneService {
 
     @Override
     public DetailPhoneResponse getPhoneForDetail(Long phoneId) {
-        return phoneRepository.findById(phoneId)
+        return phoneRepository.findByIdAndDeletedAtIsNull(phoneId)
                 .map(phoneMapper::toDetailPhoneResponse)
                 .orElseThrow(() -> new PhoneNotFoundException(PHONE_NOT_FOUND));
     }

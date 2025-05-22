@@ -12,7 +12,6 @@ import static study.phonemanagement.common.ErrorCode.*;
 
 @Entity
 @Getter @Setter
-@SQLRestriction("deleted_at is NULL")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Phone extends BaseEntity {
 
