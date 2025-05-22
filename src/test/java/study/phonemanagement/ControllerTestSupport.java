@@ -9,6 +9,8 @@ import study.phonemanagement.config.SecurityConfiguration;
 import study.phonemanagement.controller.inquiry.AdminInquiryController;
 import study.phonemanagement.controller.inquiry.InquiryController;
 import study.phonemanagement.controller.order.AdminDeliveryController;
+import study.phonemanagement.controller.order.AdminOrderController;
+import study.phonemanagement.controller.order.OrderController;
 import study.phonemanagement.controller.phone.AdminPhoneController;
 import study.phonemanagement.controller.phone.PhoneController;
 import study.phonemanagement.controller.user.AdminAuthController;
@@ -16,8 +18,10 @@ import study.phonemanagement.controller.user.AdminInitController;
 import study.phonemanagement.controller.user.AuthController;
 import study.phonemanagement.controller.user.UserController;
 import study.phonemanagement.controller.user.validator.CreateUserRequestValidator;
+import study.phonemanagement.repository.UserRepository;
 import study.phonemanagement.service.inquiry.InquiryService;
 import study.phonemanagement.service.order.DeliveryService;
+import study.phonemanagement.service.order.OrderService;
 import study.phonemanagement.service.phone.PhoneService;
 import study.phonemanagement.service.user.AdminUserService;
 import study.phonemanagement.service.user.UserService;
@@ -33,6 +37,8 @@ import study.phonemanagement.service.user.UserService;
         AdminInquiryController.class,
         InquiryController.class,
         AdminDeliveryController.class,
+        AdminOrderController.class,
+        OrderController.class,
 })
 @Import({
         CreateUserRequestValidator.class,
@@ -57,4 +63,10 @@ public abstract class ControllerTestSupport {
 
     @MockitoBean
     protected DeliveryService deliveryService;
+
+    @MockitoBean
+    protected OrderService orderService;
+
+    @MockitoBean
+    protected UserRepository userRepository;
 }
