@@ -24,7 +24,7 @@ import static study.phonemanagement.entity.phone.Storage.STORAGE_128;
 import static study.phonemanagement.entity.user.Gender.MALE;
 import static study.phonemanagement.entity.user.Role.USER;
 
-class InquiryMapperImplTest extends IntegrationTestSupport {
+class InquiryMapperTest extends IntegrationTestSupport {
 
     @Autowired
     private InquiryMapper inquiryMapper;
