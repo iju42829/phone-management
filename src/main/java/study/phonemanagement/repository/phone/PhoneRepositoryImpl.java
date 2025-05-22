@@ -26,7 +26,7 @@ public class PhoneRepositoryImpl implements PhoneRepositoryCustom {
     public Page<Phone> findAllPhone(String searchWord, Manufacturer manufacturer, Pageable pageable) {
         List<Phone> phones = queryFactory
                 .selectFrom(phone)
-                .where(searchWord(searchWord), manufacturer(manufacturer))
+                .where(phone.deletedAt.isNull(), searchWord(searchWord), manufacturer(manufacturer))
                 .orderBy(phone.createdDate.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())

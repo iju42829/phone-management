@@ -108,7 +108,7 @@ public class OrderServiceImpl implements OrderService {
 
         for (CreateCartOrderPhoneRequest createCartOrderPhoneRequest : createCartOrderRequest.getCreateCartOrderPhoneRequests()) {
             Phone phone = phoneRepository
-                    .findById(createCartOrderPhoneRequest.getPhoneId()).
+                    .findByIdAndDeletedAtIsNull(createCartOrderPhoneRequest.getPhoneId()).
                     orElseThrow(() -> new PhoneNotFoundException(PHONE_NOT_FOUND));
 
             OrderPhone orderPhone = OrderPhone.createOrderPhone(phone, createCartOrderPhoneRequest.getCount(), phone.getPrice());
