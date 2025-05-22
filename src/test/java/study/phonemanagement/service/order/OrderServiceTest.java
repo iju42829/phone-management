@@ -4,6 +4,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import study.phonemanagement.IntegrationTestSupport;
 import study.phonemanagement.controller.order.request.CreateOrderDeliveryRequest;
 import study.phonemanagement.controller.order.request.CreateOrderPhoneRequest;
@@ -68,6 +69,7 @@ class OrderServiceTest extends IntegrationTestSupport {
         deliveryRepository.deleteAllInBatch();
     }
 
+    @Transactional
     @DisplayName("주문 생성 시 휴대폰 주문 정보가 저장된다.")
     @Test
     void createOrderCheckOrderPhone() {
@@ -92,6 +94,7 @@ class OrderServiceTest extends IntegrationTestSupport {
                 .containsExactly(1, phone.getPrice());
     }
 
+    @Transactional
     @DisplayName("주문 생성 시 배송지 정보가 저장된다.")
     @Test
     void createOrderCheckDelivery() {

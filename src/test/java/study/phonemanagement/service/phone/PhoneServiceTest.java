@@ -187,7 +187,7 @@ class PhoneServiceTest extends IntegrationTestSupport {
         phoneRepository.saveAll(List.of(phone1, phone2, phone3));
 
         // when
-        CachedListPhoneResponse page = phoneService.getAllPhones("testAPPLE", APPLE, 1, 2);
+        CachedListPhoneResponse page = phoneService.getAllPhones(AVAILABLE, "testAPPLE", APPLE, 1, 2);
 
         // then
         assertThat(page.getPageNumber()).isEqualTo(1);
@@ -213,7 +213,7 @@ class PhoneServiceTest extends IntegrationTestSupport {
         phoneRepository.saveAll(List.of(phone1, phone2, phone3));
 
         // when
-        CachedListPhoneResponse page = phoneService.getAllPhones(null, null, 1, 3);
+        CachedListPhoneResponse page = phoneService.getAllPhones(AVAILABLE,null, null, 1, 3);
 
         // then
         assertThat(page.getPageNumber()).isEqualTo(1);

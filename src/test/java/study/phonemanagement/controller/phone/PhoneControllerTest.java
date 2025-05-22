@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.test.context.support.WithMockUser;
 import study.phonemanagement.ControllerTestSupport;
+import study.phonemanagement.entity.phone.Status;
 import study.phonemanagement.service.phone.response.CachedListPhoneResponse;
 import study.phonemanagement.service.phone.response.ListPhoneResponse;
 
@@ -41,7 +42,7 @@ class PhoneControllerTest extends ControllerTestSupport {
                 cachedPage.getTotalElements()
         );
 
-        when(phoneService.getAllPhones(any(), any(), anyInt(), anyInt())).thenReturn(cachedPage);
+        when(phoneService.getAllPhones(any(), any(), any(), anyInt(), anyInt())).thenReturn(cachedPage);
 
         // when - then
         mockMvc.perform(get("/phones"))
@@ -55,7 +56,7 @@ class PhoneControllerTest extends ControllerTestSupport {
                 .andExpect(model().attribute("manufacturer", ""));
 
         verify(phoneService, times(1))
-                .getAllPhones(any(), any(), anyInt(), anyInt());
+                .getAllPhones(any(), any(), any(), anyInt(), anyInt());
     }
 
     @DisplayName("manufacturer를 requestParam으로 받으면 모델에 해당 데이터를 함께 반환한다")
@@ -76,7 +77,7 @@ class PhoneControllerTest extends ControllerTestSupport {
                 cachedPage.getTotalElements()
         );
 
-        when(phoneService.getAllPhones(any(), any(), anyInt(), anyInt())).thenReturn(cachedPage);
+        when(phoneService.getAllPhones(any(), any(), any(), anyInt(), anyInt())).thenReturn(cachedPage);
 
         // when - then
         mockMvc.perform(get("/phones").param("manufacturer", SAMSUNG.name()) )
@@ -90,6 +91,6 @@ class PhoneControllerTest extends ControllerTestSupport {
                 .andExpect(model().attribute("manufacturer", SAMSUNG.name()));
 
         verify(phoneService, times(1))
-                .getAllPhones(any(), any(), anyInt(), anyInt());
+                .getAllPhones(any(), any(), any(), anyInt(), anyInt());
     }
 }

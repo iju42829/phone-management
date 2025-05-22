@@ -40,7 +40,7 @@ class PhoneRepositoryTest extends IntegrationTestSupport {
         phoneRepository.saveAll(List.of(phone1, phone2, phone3));
 
         // when
-        Page<Phone> page = phoneRepository.findAllPhone("testSamsungPhone", SAMSUNG, PageRequest.of(0, 3));
+        Page<Phone> page = phoneRepository.findAllPhone(AVAILABLE, "testSamsungPhone", SAMSUNG, PageRequest.of(0, 3));
 
         // then
         assertThat(page.getNumberOfElements()).isEqualTo(2);
@@ -63,7 +63,7 @@ class PhoneRepositoryTest extends IntegrationTestSupport {
         phoneRepository.saveAll(List.of(phone1, phone2, phone3));
 
         // when
-        Page<Phone> page = phoneRepository.findAllPhone(null, null, PageRequest.of(0, 3));
+        Page<Phone> page = phoneRepository.findAllPhone(AVAILABLE, null, null, PageRequest.of(0, 3));
 
         // then
         assertThat(page.getNumberOfElements()).isEqualTo(3);
