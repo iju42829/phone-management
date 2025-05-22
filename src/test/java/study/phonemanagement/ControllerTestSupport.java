@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import study.phonemanagement.config.SecurityConfiguration;
+import study.phonemanagement.controller.inquiry.AdminInquiryController;
 import study.phonemanagement.controller.phone.AdminPhoneController;
 import study.phonemanagement.controller.phone.PhoneController;
 import study.phonemanagement.controller.user.AdminAuthController;
@@ -13,6 +14,7 @@ import study.phonemanagement.controller.user.AdminInitController;
 import study.phonemanagement.controller.user.AuthController;
 import study.phonemanagement.controller.user.UserController;
 import study.phonemanagement.controller.user.validator.CreateUserRequestValidator;
+import study.phonemanagement.service.inquiry.InquiryService;
 import study.phonemanagement.service.phone.PhoneService;
 import study.phonemanagement.service.user.AdminUserService;
 import study.phonemanagement.service.user.UserService;
@@ -24,7 +26,8 @@ import study.phonemanagement.service.user.UserService;
         AdminPhoneController.class,
         AdminInitController.class,
         AdminAuthController.class,
-        AuthController.class
+        AuthController.class,
+        AdminInquiryController.class,
 })
 @Import({
         CreateUserRequestValidator.class,
@@ -43,4 +46,7 @@ public abstract class ControllerTestSupport {
 
     @MockitoBean
     protected AdminUserService adminUserService;
+
+    @MockitoBean
+    protected InquiryService inquiryService;
 }
