@@ -2,6 +2,7 @@ package study.phonemanagement.controller.user;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.test.context.support.WithMockUser;
 import study.phonemanagement.ControllerTestSupport;
 
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VALUE;
@@ -82,5 +83,14 @@ class AdminInitControllerTest extends ControllerTestSupport {
                 .andExpect(model().attributeHasErrors("createUserRequest"))
                 .andExpect(model().attributeErrorCount("createUserRequest", 8))
                 .andExpect(view().name("users/adminJoin"));
+    }
+
+    @DisplayName("로그아웃 성공 시 로그인 페이지로 이동합니다.")
+    @Test
+    @WithMockUser
+    void logout() throws Exception {
+        mockMvc.perform(get("/users/logout"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/users/login"));
     }
 }

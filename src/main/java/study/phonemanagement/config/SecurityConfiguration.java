@@ -80,7 +80,7 @@ public class SecurityConfiguration {
                         .loginProcessingUrl("/users/login")
                         .defaultSuccessUrl("/phones").permitAll());
 
-        http.csrf(AbstractHttpConfigurer::disable);
+//        http.csrf(AbstractHttpConfigurer::disable);
 
         http
                 .sessionManagement((auth) -> auth

@@ -12,6 +12,8 @@
     <h2 class="mb-4">문의 작성</h2>
 
     <form th:action="@{/inquiries/{phoneId}(phoneId=${phoneId})}" th:object="${createInquiryRequest}" method="post" class="needs-validation">
+      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
       <div class="mb-3">
         <label for="content" class="form-label">문의 내용</label>
         <textarea id="content" class="form-control" th:field="*{content}" rows="6" placeholder="문의하실 내용을 작성해주세요"></textarea>
