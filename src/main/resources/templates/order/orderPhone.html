@@ -11,6 +11,8 @@
     <h2 class="mb-5 text-center fw-bold">주문하기</h2>
 
     <form th:action="@{/orders}" th:object="${order}" method="post">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
         <div class="mb-5">
             <h4 class="mb-3 border-bottom pb-2">상품 내역</h4>
             <div th:each="dto, idx : *{createOrderPhoneRequestList}" class="mb-4">
