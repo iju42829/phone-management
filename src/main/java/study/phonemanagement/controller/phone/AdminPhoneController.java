@@ -53,7 +53,7 @@ public class AdminPhoneController {
                                 @RequestParam(defaultValue = "1") Integer pageNumber,
                                 @RequestParam(defaultValue = "20") Integer pageSize,
                                 Model model) {
-        CachedListPhoneResponse cachedPage = phoneService.getAllPhones(null, searchWord, manufacturer, pageNumber, pageSize);
+        CachedListPhoneResponse cachedPage = phoneService.getAllPhones(searchWord, manufacturer, pageNumber, pageSize);
 
         Page<ListPhoneResponse> page = new PageImpl<>(
                 cachedPage.getContent(), PageRequest.of(cachedPage.getPageNumber() - 1,

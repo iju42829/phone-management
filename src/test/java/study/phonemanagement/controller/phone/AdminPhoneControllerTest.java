@@ -46,7 +46,7 @@ class AdminPhoneControllerTest extends ControllerTestSupport {
         );
 
         // stubbing
-        when(phoneService.getAllPhones(any(), any(), any(), any(Integer.class), any(Integer.class))).thenReturn(cachedPage);
+        when(phoneService.getAllPhones(any(), any(), any(Integer.class), any(Integer.class))).thenReturn(cachedPage);
 
         // when - then
         mockMvc.perform(get("/admin/phones"))
@@ -60,7 +60,7 @@ class AdminPhoneControllerTest extends ControllerTestSupport {
                 .andExpect(model().attribute("manufacturer", ""));
 
         verify(phoneService, times(1))
-                .getAllPhones(any(), any(), any(), any(Integer.class), any(Integer.class));
+                .getAllPhones(any(), any(), any(Integer.class), any(Integer.class));
     }
 
     @DisplayName("manufacturer를 requestParam으로 받으면 모델에 해당 데이터를 함께 반환한다")
@@ -80,7 +80,7 @@ class AdminPhoneControllerTest extends ControllerTestSupport {
         );
 
         // stubbing
-        when(phoneService.getAllPhones(any(), any(), any(), any(Integer.class), any(Integer.class))).thenReturn(cachedPage);
+        when(phoneService.getAllPhones(any(), any(), any(Integer.class), any(Integer.class))).thenReturn(cachedPage);
 
         // when - then
         mockMvc.perform(get("/admin/phones").param("manufacturer", SAMSUNG.name()))
@@ -94,7 +94,7 @@ class AdminPhoneControllerTest extends ControllerTestSupport {
                 .andExpect(model().attribute("manufacturer", SAMSUNG.name()));
 
         verify(phoneService, times(1))
-                .getAllPhones(any(), any(), any(), any(Integer.class), any(Integer.class));
+                .getAllPhones(any(), any(), any(Integer.class), any(Integer.class));
     }
 
 

@@ -10,6 +10,7 @@ import study.phonemanagement.service.phone.response.UpdatePhoneResponse;
 
 public interface PhoneService {
     CachedListPhoneResponse getAllPhones(Status status, String searchWord, Manufacturer manufacturer, Integer pageNumber, Integer pageSize);
+    CachedListPhoneResponse getAllPhones(String searchWord, Manufacturer manufacturer, Integer pageNumber, Integer pageSize);
 
     Long createPhone(CreatePhoneRequest createPhoneRequest);
 

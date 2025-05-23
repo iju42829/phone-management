@@ -52,6 +52,21 @@ public class PhoneServiceImpl implements PhoneService {
     }
 
     @Override
+    @Cacheable(cacheNames = "getAdminPhones", key = "'phones:pageNumber' + #pageNumber + ':pageSize:' + #pageSize", cacheManager = "cacheManager")
+    public CachedListPhoneResponse getAllPhones(String searchWord, Manufacturer manufacturer, Integer pageNumber, Integer pageSize) {
+        Pageable pageable = PageRequest.of(
+                pageNumber - 1,
+                pageSize,
+                Sort.by(Sort.Direction.DESC, "createdDate")
+        );
+
+        Page<ListPhoneResponse> page = phoneRepository.findAllPhone(null, searchWord, manufacturer, pageable)
+                .map(phoneMapper::toPhoneListResponse);
+
+        return phoneMapper.toCachedListPhoneResponse(page) ;
+    }
+
+    @Override
     public Long createPhone(CreatePhoneRequest createPhoneRequest) {
         Phone phone = phoneMapper.toPhone(createPhoneRequest);
 
