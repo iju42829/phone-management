@@ -202,6 +202,32 @@ class PhoneServiceTest extends IntegrationTestSupport {
                 );
     }
 
+    @DisplayName("휴대폰을 이름, 제조사 기준으로 조회후 최신순으로 정렬 후 반환한다.")
+    @Test
+    void getAllPhonesNoStatus() {
+        // given
+        Phone phone1 = createPhoneEntity("testAPPLEPhone1", APPLE, STORAGE_128, AVAILABLE, 10000, 10, "testColor");
+        Phone phone2 = createPhoneEntity("testSAMUNGPhone2", SAMSUNG, STORAGE_128, AVAILABLE, 10000, 10, "testColor");
+        Phone phone3 = createPhoneEntity("testLGPhone3", LG, STORAGE_128, AVAILABLE, 10000, 10, "testColor");
+
+        phoneRepository.saveAll(List.of(phone1, phone2, phone3));
+
+        // when
+        CachedListPhoneResponse page = phoneService.getAllPhones("testAPPLE", APPLE, 1, 2);
+
+        // then
+        assertThat(page.getPageNumber()).isEqualTo(1);
+        assertThat(page.getPageSize()).isEqualTo(2);
+        assertThat(page.getTotalElements()).isEqualTo(1);
+
+        assertThat(page.getContent())
+                .extracting(ListPhoneResponse::getName, ListPhoneResponse::getManufacturer, ListPhoneResponse::getStorage,
+                        ListPhoneResponse::getStatus, ListPhoneResponse::getPrice, ListPhoneResponse::getQuantity, ListPhoneResponse::getColor)
+                .containsExactlyInAnyOrder(
+                        tuple(phone1.getName(), phone1.getManufacturer(), phone1.getStorage(), phone1.getStatus(), phone1.getPrice(), phone1.getQuantity(), phone1.getColor())
+                );
+    }
+
     @DisplayName("휴대폰을 이름, 제조사 조건이 없다면 휴대폰을 최신순으로 정렬 후 반환한다.")
     @Test
     void getAllPhonesWithNoSearchWordAndNoManufacturer() {
