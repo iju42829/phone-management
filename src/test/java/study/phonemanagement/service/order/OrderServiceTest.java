@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
 import study.phonemanagement.IntegrationTestSupport;
+import study.phonemanagement.controller.cart.request.CreateCartOrderPhoneRequest;
+import study.phonemanagement.controller.cart.request.CreateCartOrderRequest;
 import study.phonemanagement.controller.order.request.CancelOrderRequest;
 import study.phonemanagement.controller.order.request.CreateOrderDeliveryRequest;
 import study.phonemanagement.controller.order.request.CreateOrderPhoneRequest;
@@ -143,6 +145,26 @@ class OrderServiceTest extends IntegrationTestSupport {
 
         // when
         Long orderSavedId = orderService.createOrder(createOrderRequestTest(phone), customUserDetails);
+
+        // then
+        Phone checkPhone = phoneRepository.findById(phone.getId()).orElseThrow(() -> new PhoneNotFoundException(PHONE_NOT_FOUND));
+        assertThat(checkPhone.getQuantity()).isEqualTo(99);
+    }
+
+    @DisplayName("장바구니 주문 성공 시 재고가 주문 수량만큼 감소한다.")
+    @Test
+    void createOrderByCart() {
+        // given
+        Phone phone = createTestPhoneEntity("testPhone", SAMSUNG);
+        User user = createTestUser("testUser", "test", "test@test", MALE, USER);
+
+        phoneRepository.save(phone);
+        userRepository.save(user);
+
+        CustomUserDetails customUserDetails = new CustomUserDetails(user.getUsername(), user.getPassword(), user.getRole().getKey());
+
+        // when
+        Long orderSavedId = orderService.createOrderByCart(createCartOrderRequest(phone), customUserDetails);
 
         // then
         Phone checkPhone = phoneRepository.findById(phone.getId()).orElseThrow(() -> new PhoneNotFoundException(PHONE_NOT_FOUND));
@@ -358,6 +380,19 @@ class OrderServiceTest extends IntegrationTestSupport {
         CreateOrderRequest createOrderRequest = new CreateOrderRequest();
         createOrderRequest.setDelivery(orderDeliveryRequest);
         createOrderRequest.setCreateOrderPhoneRequestList(List.of(createOrderPhoneRequest));
+
+        return createOrderRequest;
+    }
+
+    private static CreateCartOrderRequest createCartOrderRequest(Phone phone) {
+        CreateOrderDeliveryRequest orderDeliveryRequest = CreateOrderDeliveryRequest.createOrderDeliveryRequest("testCity", "testStreet", "testZipcode", "testDetail");
+        CreateCartOrderPhoneRequest createOrderPhoneRequest = new CreateCartOrderPhoneRequest();
+        createOrderPhoneRequest.setPhoneId(phone.getId());
+        createOrderPhoneRequest.setCount(1);
+
+        CreateCartOrderRequest createOrderRequest = new CreateCartOrderRequest();
+        createOrderRequest.setDelivery(orderDeliveryRequest);
+        createOrderRequest.setCreateCartOrderPhoneRequests(List.of(createOrderPhoneRequest));
 
         return createOrderRequest;
     }
