@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.util.StringUtils;
 import study.phonemanagement.entity.phone.Manufacturer;
 import study.phonemanagement.entity.phone.Phone;
+import study.phonemanagement.entity.phone.Status;
 
 import java.util.List;
 
@@ -23,10 +24,10 @@ public class PhoneRepositoryImpl implements PhoneRepositoryCustom {
     }
 
     @Override
-    public Page<Phone> findAllPhone(String searchWord, Manufacturer manufacturer, Pageable pageable) {
+    public Page<Phone> findAllPhone(Status status, String searchWord, Manufacturer manufacturer, Pageable pageable) {
         List<Phone> phones = queryFactory
                 .selectFrom(phone)
-                .where(phone.deletedAt.isNull(), searchWord(searchWord), manufacturer(manufacturer))
+                .where(phone.deletedAt.isNull(), searchWord(searchWord), manufacturer(manufacturer), status(status))
                 .orderBy(phone.createdDate.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -35,7 +36,7 @@ public class PhoneRepositoryImpl implements PhoneRepositoryCustom {
         Long total = queryFactory
                 .select(phone.count())
                 .from(phone)
-                .where(searchWord(searchWord), manufacturer(manufacturer))
+                .where(phone.deletedAt.isNull(), searchWord(searchWord), manufacturer(manufacturer), status(status))
                 .fetchOne();
 
         return new PageImpl<>(phones, pageable, total);
@@ -47,5 +48,9 @@ public class PhoneRepositoryImpl implements PhoneRepositoryCustom {
 
     private BooleanExpression manufacturer(Manufacturer manufacturer) {
         return manufacturer == null ? null : phone.manufacturer.eq(manufacturer);
+    }
+
+    private BooleanExpression status(Status status) {
+        return status == null ? null : phone.status.eq(status);
     }
 }

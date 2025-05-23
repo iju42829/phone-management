@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import study.phonemanagement.entity.phone.Manufacturer;
+import study.phonemanagement.entity.phone.Status;
 import study.phonemanagement.service.phone.PhoneService;
 import study.phonemanagement.service.phone.response.CachedListPhoneResponse;
 import study.phonemanagement.service.phone.response.ListPhoneResponse;
@@ -31,7 +32,7 @@ public class PhoneController {
                                 @RequestParam(defaultValue = "1") Integer pageNumber,
                                 @RequestParam(defaultValue = "20") Integer pageSize,
                                 Model model) {
-        CachedListPhoneResponse cachedPage = phoneService.getAllPhones(searchWord, manufacturer, pageNumber, pageSize);
+        CachedListPhoneResponse cachedPage = phoneService.getAllPhones(Status.AVAILABLE, searchWord, manufacturer, pageNumber, pageSize);
 
         Page<ListPhoneResponse> page = new PageImpl<>(
                 cachedPage.getContent(), PageRequest.of(cachedPage.getPageNumber() - 1,

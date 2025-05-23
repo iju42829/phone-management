@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static study.phonemanagement.common.ErrorCode.*;
+import static study.phonemanagement.entity.phone.Status.*;
 import static study.phonemanagement.entity.user.Role.*;
 
 @Service
@@ -64,7 +65,7 @@ public class OrderServiceImpl implements OrderService {
 
         for (CreateOrderPhoneRequest createOrderPhoneRequest : createOrderRequest.getCreateOrderPhoneRequestList()) {
             Phone phone = phoneRepository
-                    .findById(createOrderPhoneRequest.getPhoneId()).
+                    .findByIdAndStatusAndDeletedAtIsNull(createOrderPhoneRequest.getPhoneId(), AVAILABLE).
                     orElseThrow(() -> new PhoneNotFoundException(PHONE_NOT_FOUND));
 
             OrderPhone orderPhone = OrderPhone.createOrderPhone(phone, createOrderPhoneRequest.getCount(), phone.getPrice());
@@ -108,7 +109,7 @@ public class OrderServiceImpl implements OrderService {
 
         for (CreateCartOrderPhoneRequest createCartOrderPhoneRequest : createCartOrderRequest.getCreateCartOrderPhoneRequests()) {
             Phone phone = phoneRepository
-                    .findByIdAndDeletedAtIsNull(createCartOrderPhoneRequest.getPhoneId()).
+                    .findByIdAndStatusAndDeletedAtIsNull(createCartOrderPhoneRequest.getPhoneId(), AVAILABLE).
                     orElseThrow(() -> new PhoneNotFoundException(PHONE_NOT_FOUND));
 
             OrderPhone orderPhone = OrderPhone.createOrderPhone(phone, createCartOrderPhoneRequest.getCount(), phone.getPrice());

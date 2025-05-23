@@ -13,6 +13,7 @@ import study.phonemanagement.controller.phone.request.UpdatePhoneRequest;
 import study.phonemanagement.entity.cart.Cart;
 import study.phonemanagement.entity.phone.Manufacturer;
 import study.phonemanagement.entity.phone.Phone;
+import study.phonemanagement.entity.phone.Status;
 import study.phonemanagement.exception.phone.PhoneNotFoundException;
 import study.phonemanagement.mapper.phone.PhoneMapper;
 import study.phonemanagement.repository.order.CartRepository;
@@ -37,6 +38,21 @@ public class PhoneServiceImpl implements PhoneService {
 
     @Override
     @Cacheable(cacheNames = "getPhones", key = "'phones:pageNumber' + #pageNumber + ':pageSize:' + #pageSize", cacheManager = "cacheManager")
+    public CachedListPhoneResponse getAllPhones(Status status, String searchWord, Manufacturer manufacturer, Integer pageNumber, Integer pageSize) {
+        Pageable pageable = PageRequest.of(
+                pageNumber - 1,
+                pageSize,
+                Sort.by(Sort.Direction.DESC, "createdDate")
+        );
+
+        Page<ListPhoneResponse> page = phoneRepository.findAllPhone(status, searchWord, manufacturer, pageable)
+                .map(phoneMapper::toPhoneListResponse);
+
+        return phoneMapper.toCachedListPhoneResponse(page) ;
+    }
+
+    @Override
+    @Cacheable(cacheNames = "getAdminPhones", key = "'phones:pageNumber' + #pageNumber + ':pageSize:' + #pageSize", cacheManager = "cacheManager")
     public CachedListPhoneResponse getAllPhones(String searchWord, Manufacturer manufacturer, Integer pageNumber, Integer pageSize) {
         Pageable pageable = PageRequest.of(
                 pageNumber - 1,
@@ -44,7 +60,7 @@ public class PhoneServiceImpl implements PhoneService {
                 Sort.by(Sort.Direction.DESC, "createdDate")
         );
 
-        Page<ListPhoneResponse> page = phoneRepository.findAllPhone(searchWord, manufacturer, pageable)
+        Page<ListPhoneResponse> page = phoneRepository.findAllPhone(null, searchWord, manufacturer, pageable)
                 .map(phoneMapper::toPhoneListResponse);
 
         return phoneMapper.toCachedListPhoneResponse(page) ;
