@@ -37,7 +37,11 @@ public class PhoneServiceImpl implements PhoneService {
     private final PhoneMapper phoneMapper;
 
     @Override
-    @Cacheable(cacheNames = "getPhones", key = "'phones:pageNumber' + #pageNumber + ':pageSize:' + #pageSize", cacheManager = "cacheManager")
+    @Cacheable(cacheNames = "getPhones",
+            key = "'phones:search:' + (#searchWord != null ? #searchWord : '')" +
+                    " + ':manufacturer:' + (#manufacturer != null ? #manufacturer.name() : '')" +
+                    " + ':page:' + #pageNumber + ':size:' + #pageSize",
+            cacheManager = "cacheManager")
     public CachedListPhoneResponse getAllPhones(Status status, String searchWord, Manufacturer manufacturer, Integer pageNumber, Integer pageSize) {
         Pageable pageable = PageRequest.of(
                 pageNumber - 1,
@@ -52,7 +56,11 @@ public class PhoneServiceImpl implements PhoneService {
     }
 
     @Override
-    @Cacheable(cacheNames = "getAdminPhones", key = "'phones:pageNumber' + #pageNumber + ':pageSize:' + #pageSize", cacheManager = "cacheManager")
+    @Cacheable(cacheNames = "getAdminPhones",
+            key = "'phones:search:' + (#searchWord != null ? #searchWord : '')" +
+                    " + ':manufacturer:' + (#manufacturer != null ? #manufacturer.name() : '')" +
+                    " + ':page:' + #pageNumber + ':size:' + #pageSize",
+            cacheManager = "cacheManager")
     public CachedListPhoneResponse getAllPhones(String searchWord, Manufacturer manufacturer, Integer pageNumber, Integer pageSize) {
         Pageable pageable = PageRequest.of(
                 pageNumber - 1,
