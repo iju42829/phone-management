@@ -27,6 +27,9 @@
 ## 아키텍처
 ![architecture](https://github.com/user-attachments/assets/8532e740-8635-44da-beb0-250c53f6fa7a)
 
+## 네트워크 아키텍처
+![network architecture](https://github.com/user-attachments/assets/16ea3623-fd34-4fb6-8f8e-78996b316dd3)
+
 ## ERD
 ![erd](https://github.com/user-attachments/assets/f1bf227a-4b9e-45d4-8c50-28c2298b9566)
 
