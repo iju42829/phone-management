@@ -30,6 +30,9 @@
 ## 네트워크 아키텍처
 ![network architecture](https://github.com/user-attachments/assets/16ea3623-fd34-4fb6-8f8e-78996b316dd3)
 
+## CI/CD 아키텍처
+![ci cd architecture](https://github.com/user-attachments/assets/f08fd731-df8f-4670-8173-f88d7fb73207)
+
 ## ERD
 ![erd](https://github.com/user-attachments/assets/f1bf227a-4b9e-45d4-8c50-28c2298b9566)
 
