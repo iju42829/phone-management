@@ -13,7 +13,8 @@
 | Database   | MySQL (Main), H2 (Test), Redis (Cache) |
 | ORM        | JPA                                    |
 | Test       | JUnit 5                                |
-| Deployment | Docker                                 |
+| Infra      | EC2, S3, VPC, ECR, Code Deploy         |
+| Deployment | Github Actions(CI/CD), Docker          |
 
 ## 주요 구현 내용
 1. Entity-DTO 간 변환을 위한 Mapper 클래스 구현
@@ -23,6 +24,8 @@
 4. Redis Cache Aside 전략 적용으로 자주 접근하는 페이지 성능 개선 (171ms → 53ms)
 5. 파사드 패턴 도입을 통한 주문-장바구니 로직의 트랜잭션 일관성 및 롤백 처리
 6. 낙관적 락 적용으로 재고 동시성 문제 해결
+7. VPC를 Public/Private Subnet으로 분리하고, Spring Boot 애플리케이션은 Public Subnet에, Redis와 MySQL은 Private Subnet에 배치하여 보안을 강화
+8. Github Actions와 AWS CodeDeploy를 활용한 CI/CD 자동 배포 파이프라인 구축
 
 ## 아키텍처
 ![architecture](https://github.com/user-attachments/assets/8532e740-8635-44da-beb0-250c53f6fa7a)
